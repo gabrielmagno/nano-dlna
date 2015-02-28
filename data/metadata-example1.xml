@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DIDL-Lite xmlns="urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:upnp="urn:schemas-upnp-org:metadata-1-0/upnp/" xmlns:dlna="urn:schemas-dlna-org:metadata-1-0/" xmlns:sec="http://www.sec.co.kr/" xmlns:xbmc="urn:schemas-xbmc-org:metadata-1-0/">
+  <item id="videodb://movies/titles/1?xsp=%7b%22order%22%3a%7b%22direction%22%3a%22ascending%22%2c%22ignorefolders%22%3a0%2c%22method%22%3a%22sorttitle%22%7d%2c%22type%22%3a%22movies%22%7d" parentID="videodb://movies/titles/?xsp=%7b%22order%22%3a%7b%22direction%22%3a%22ascending%22%2c%22ignorefolders%22%3a0%2c%22method%22%3a%22sorttitle%22%7d%2c%22type%22%3a%22movies%22%7d" refID="videodb://movies/titles/1" restricted="1">
+    <dc:title>The Amazing Spider-Man 2</dc:title>
+    <dc:creator>Unknown</dc:creator>
+    <dc:date>2014-01-01</dc:date>
+    <upnp:actor role="Spider-Man / Peter Parker">Andrew Garfield</upnp:actor>
+    <upnp:actor role="Gwen Stacy">Emma Stone</upnp:actor>
+    <upnp:actor role="Electro / Max Dillon">Jamie Foxx</upnp:actor>
+    <upnp:actor role="Green Goblin / Harry Osborn">Dane DeHaan</upnp:actor>
+    <upnp:actor role="Donald Menken">Colm Feore</upnp:actor>
+    <upnp:actor role="Felicia">Felicity Jones</upnp:actor>
+    <upnp:actor role="Aleksei Sytsevich">Paul Giamatti</upnp:actor>
+    <upnp:actor role="Aunt May">Sally Field</upnp:actor>
+    <upnp:actor role="Mary Parker">Embeth Davidtz</upnp:actor>
+    <upnp:actor role="Richard Parker">Campbell Scott</upnp:actor>
+    <upnp:actor role="Dr. Ashley Kafka">Marton Csokas</upnp:actor>
+    <upnp:actor role="Man in Black Suit">Louis Cancelmi</upnp:actor>
+    <upnp:actor role="Young Peter Parker">Max Charles</upnp:actor>
+    <upnp:actor role="Kari">Sarah Gadon</upnp:actor>
+    <upnp:actor role="Graduation Guest">Stan Lee</upnp:actor>
+    <upnp:actor role="Norman Osborn">Chris Cooper</upnp:actor>
+    <upnp:actor role="Agent Berkley">Frank Deal</upnp:actor>
+    <upnp:actor role="Captain Stacy">Denis Leary</upnp:actor>
+    <upnp:actor role="Uncle Ben">Martin Sheen</upnp:actor>
+    <upnp:actor role="Flash Thompson">Chris Zylka</upnp:actor>
+    <upnp:actor role="Allistar Smythe">B. J. Novak</upnp:actor>
+    <upnp:author>Alex Kurtzman</upnp:author>
+    <upnp:author>Roberto Orci</upnp:author>
+    <upnp:author>Jeff Pinkner</upnp:author>
+    <upnp:director>Marc Webb</upnp:director>
+    <dc:publisher>Columbia Pictures</dc:publisher>
+    <upnp:genre>Action</upnp:genre>
+    <upnp:genre>Adventure</upnp:genre>
+    <upnp:genre>Fantasy</upnp:genre>
+    <upnp:albumArtURI dlna:profileID="JPEG_TN">http://192.168.1.4:1318/%25/972ECCF3ECA468CE8D3B03508FB74541/sxCWu1t1pcBl7L5ofOJQEY1v8tp.jpg</upnp:albumArtURI>
+    <dc:description>No more secrets.</dc:description>
+    <upnp:longDescription>For Peter Parker, life is busy. Between taking out the bad guys as Spider-Man and spending time with the person he loves, Gwen Stacy, high school graduation cannot come quickly enough. Peter has not forgotten about the promise he made to Gwen’s father to protect her by staying away, but that is a promise he cannot keep. Things will change for Peter when a new villain, Electro, emerges, an old friend, Harry Osborn, returns, and Peter uncovers new clues about his past.</upnp:longDescription>
+    <upnp:rating>Rated PG-13</upnp:rating>
+    <upnp:lastPlaybackPosition>617</upnp:lastPlaybackPosition>
+    <upnp:lastPlaybackTime>2015-02-25T02:16:38+00:00</upnp:lastPlaybackTime>
+    <upnp:playbackCount>0</upnp:playbackCount>
+    <upnp:episodeSeason>0</upnp:episodeSeason>
+    <res xmlns:pv="http://www.pv.com/pvns/" duration="2:21:34.000" resolution="1920x800" protocolInfo="http-get:*:video/mp4:DLNA.ORG_PN=MPEG4_P2_SP_AAC;DLNA.ORG_OP=01;DLNA.ORG_CI=0;DLNA.ORG_FLAGS=01500000000000000000000000000000" pv:subtitleFileUri="http://192.168.1.4:1318/%25/0D6BB987C1E6EA3A283CEDFE57FD26A7/The.Amazing.Spider.Man.2.2014.1080p.BluRay.x264.YIFY.srt" pv:subtitleFileType="srt">http://192.168.1.4:1318/%25/62920C8391193FEA076FCD856B44BD45/The.Amazing.Spider.Man.2.2014.1080p.BluRay.x264.YIFY.mp4</res>
+    <res protocolInfo="xbmc.org:*:fanart:*">http://192.168.1.4:1318/%25/A3C9A0DF20A3900ED5659D6C487C3B95/tmFDgDmrdp5DYezwpL0ymQKIbnV.jpg</res>
+    <res protocolInfo="xbmc.org:*:poster:*">http://192.168.1.4:1318/%25/972ECCF3ECA468CE8D3B03508FB74541/sxCWu1t1pcBl7L5ofOJQEY1v8tp.jpg</res>
+    <res protocolInfo="http-get:*:text/srt:*">http://192.168.1.4:1318/%25/0D6BB987C1E6EA3A283CEDFE57FD26A7/The.Amazing.Spider.Man.2.2014.1080p.BluRay.x264.YIFY.srt</res>
+    <res protocolInfo="http-get:*:smi/caption:*">http://192.168.1.4:1318/%25/0D6BB987C1E6EA3A283CEDFE57FD26A7/The.Amazing.Spider.Man.2.2014.1080p.BluRay.x264.YIFY.srt</res>
+    <sec:CaptionInfoEx sec:type="srt">http://192.168.1.4:1318/%25/0D6BB987C1E6EA3A283CEDFE57FD26A7/The.Amazing.Spider.Man.2.2014.1080p.BluRay.x264.YIFY.srt</sec:CaptionInfoEx>
+    <sec:CaptionInfo sec:type="srt">http://192.168.1.4:1318/%25/0D6BB987C1E6EA3A283CEDFE57FD26A7/The.Amazing.Spider.Man.2.2014.1080p.BluRay.x264.YIFY.srt</sec:CaptionInfo>
+    <xbmc:dateadded>2014-08-10</xbmc:dateadded>
+    <xbmc:rating>6.9</xbmc:rating>
+    <xbmc:votes>248,581</xbmc:votes>
+    <xbmc:artwork type="fanart">http://192.168.1.4:1318/%25/A3C9A0DF20A3900ED5659D6C487C3B95/tmFDgDmrdp5DYezwpL0ymQKIbnV.jpg</xbmc:artwork>
+    <xbmc:artwork type="poster">http://192.168.1.4:1318/%25/972ECCF3ECA468CE8D3B03508FB74541/sxCWu1t1pcBl7L5ofOJQEY1v8tp.jpg</xbmc:artwork>
+    <xbmc:uniqueidentifier>tt1872181</xbmc:uniqueidentifier>
+    <upnp:class>object.item.videoItem.movie</upnp:class>
+  </item>
+</DIDL-Lite>

@@ -1,11 +1,16 @@
 {
-    "name": "",
+    "name": "nano-dlna",
     "version": "0.0.3",
-    "description": "An UPnP/DLNA MediaRenderer client",
+    "description": "A minimal UPnP/DLNA media streamer",
     "author": "gabrielmagno",
     "license": "MIT",
     "main": "nano_dlna.js",
     "dependencies": {
+        "finalhandler": "~0.3.3",
+        "format-unicorn": "1.1.0",
+        "ip": "~0.3.2",
+        "minimist": "~1.1.0",
+        "serve-static": "~1.9.1",
         "upnp-mediarenderer-client": "~0.0.3"
     },
     "scripts": {

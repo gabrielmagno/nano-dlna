@@ -1,0 +1,11 @@
+<DIDL-Lite xmlns="urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:upnp="urn:schemas-upnp-org:metadata-1-0/upnp/" xmlns:dlna="urn:schemas-dlna-org:metadata-1-0/" xmlns:sec="http://www.sec.co.kr/" xmlns:xbmc="urn:schemas-xbmc-org:metadata-1-0/">
+    <item id="0" parentID="-1" restricted="1">
+        <dc:title>Popcorn Time Video</dc:title>
+        <res protocolInfo="http-get:*:video/{type_video}:" xmlns:pv="http://www.pv.com/pvns/" pv:subtitleFileUri="{uri_sub}" pv:subtitleFileType="{type_sub}">{uri_video}</res>
+        <res protocolInfo="http-get:*:text/srt:*">{uri_sub}</res>
+        <res protocolInfo="http-get:*:smi/caption:*">{uri_sub}</res>
+        <sec:CaptionInfoEx sec:type="{type_sub}">{uri_sub}</sec:CaptionInfoEx>
+        <sec:CaptionInfo sec:type="{type_sub}">{uri_sub}</sec:CaptionInfo>
+        <upnp:class>object.item.videoItem.movie</upnp:class>
+    </item>
+</DIDL-Lite>
