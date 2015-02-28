@@ -3,8 +3,10 @@ A minimal UPnP/DLNA media streamer
 
 ##TODO
 - [X] HTTP server to stream the media files.
+- [ ] Multi-folder file streaming
+- [ ] Automatic find video and subtitle files
 - [X] MediaRenderer client connection
-- [X] Send metadata of the video to the MediaRenderer'
+- [X] Send metadata of the video to the MediaRenderer
 - [ ] Handle flexible metadata
 - [ ] SDDP search to find UPnP devices
 - [X] Argument parsing
