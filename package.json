@@ -1,0 +1,25 @@
+{
+    "name": "",
+    "version": "0.0.3",
+    "description": "An UPnP/DLNA MediaRenderer client",
+    "author": "gabrielmagno",
+    "license": "MIT",
+    "main": "nano_dlna.js",
+    "dependencies": {
+        "upnp-mediarenderer-client": "~0.0.3"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/gabrielmagno/nano-dlna.git"
+    },
+    "keywords": [
+        "upnp",
+        "dlna",
+        "mediarenderer",
+        "tv"
+    ]
+}
+
