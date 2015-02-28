@@ -14,9 +14,9 @@ HTTP_PORT_DEFAULT = 8000
 
 http_port = HTTP_PORT_DEFAULT
 
-files = {"file_cover": "/dados/Videos/Series/Seinfeld/cover.jpg",
-         "file_video": "/dados/Videos/Series/Seinfeld/Pilot - [DVD]/001 - The Seinfeld Chronicles - [DVD].avi",
-         "file_subtitle": "/dados/Videos/Series/Seinfeld/Pilot - [DVD]/001 - The Seinfeld Chronicles - [DVD].srt"}
+files = {"file_cover": "/var/tmp/nano-dlna/cover.jpg",
+         "file_video": "/var/tmp/nano-dlna/video_1.jpg",
+         "file_subtitle": "/var/tmp/nano-dlna/video_1.srt"}
 files_index = {"/{}".format(os.path.basename(file_path)):file_path 
                    for (file_ref, file_path) in files.items() } 
 
