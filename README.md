@@ -1,6 +1,9 @@
 # nano-dlna
 A minimal UPnP/DLNA media streamer
 
+## Usage
+node index.js --folder="/folder/to/files" --file_video="video.mkv" --file_sub="video.srt" --media-renderer-url="http://192.168.1.13:1577/"
+
 ##TODO
 - [X] HTTP server to stream the media files.
 - [ ] Multi-folder file streaming
