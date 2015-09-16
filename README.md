@@ -15,3 +15,4 @@ node index.js --folder="/folder/to/files" --file_video="video.mkv" --file_sub="v
 - [X] Argument parsing
 - [ ] CLI interface to send controller actions (play, pause, stop, etc) to the MediaRenderer
 - [ ] CLI progress bar visualization
+
