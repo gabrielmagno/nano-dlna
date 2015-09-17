@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # encoding: UTF-8
 
+import os
 import socket
 import http.server
 
@@ -21,18 +22,15 @@ class StreamingHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 
     server_version = "StreamingHTTP/" + __version___
 
-    def set_files(self, files=None, rename=False):
-        self.files_ref = files
-        self.files_index = {os.path.basename(file_path):file_path 
-                                for (file_ref, file_path) in files.items()} 
-
     def send_head(self):
-        path = self.translate_path(self.path)
+        #path = self.translate_path(self.path)
+        path = self.path[1:] 
         f = None
+
         ctype = self.guess_type(path)
         print(self.path, path, ctype)
         try:
-            f = open(self.files_ref[path], "rb")
+            f = open(self.files_index[path], "rb")
         except OSError:
             self.send_error(404, "File not found")
             return None
@@ -53,30 +51,44 @@ def get_devices():
 
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
     s.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 4)
-    s.bind(("", SSDP_BROADCAST_PORT))
+    s.bind(("", SSDP_BROADCAST_PORT+10))
     
     s.sendto(bytes(SSDP_BROADCAST_MSG, "UTF-8"), (SSDP_BROADCAST_ADDR, 
                                                   SSDP_BROADCAST_PORT))
+    s.settimeout(5.0)
     
     devices = []
-
     while True:
-        data, addr = s.recvfrom(1024)
-        info = [a.split(":", 1) for a in data.decode("UTF-8").split("\r\n")[1:]]
-        device = dict([(a[0].strip(), a[1].strip()) for a in info if len(a) >= 2])
-        devices.append(device)
-        print(info)
+
+        try:
+            data, addr = s.recvfrom(1024)
+        except socket.timeout:
+            break
+
+        try:
+            info = [a.split(":", 1) for a in data.decode("UTF-8").split("\r\n")[1:]]
+            device = dict([(a[0].strip().lower(), a[1].strip()) for a in info if len(a) >= 2])
+            devices.append(device)
+        except:
+            pass
+
+    devices = [device for device in devices if "AVTransport" in device["st"]]
 
     return devices
 
 
 def set_stream_server(http_port):
-    files = {"file_cover": "/var/tmp/nano-dlna/imagem_mundo.jpg",
-             "file_video": "/var/tmp/nano-dlna/video_evandro.mp4"}
+    files = {"file_cover": "/var/tmp/nano-dlna/my_cover.jpg",
+             "file_video": "/var/tmp/nano-dlna/my_video.mp4"}
     
     httph = StreamingHTTPRequestHandler
+    httph.files_ref = files
+    httph.files_index = {os.path.basename(file_path):file_path 
+                             for (file_ref, file_path) in files.items()} 
+    print(httph.files_index)
+
     httpd = http.server.HTTPServer(("", http_port), httph)
-    httpd.RequestHandlerClass.set_files(files)
+    #httpd.RequestHandlerClass.set_files(files)
     
     print("HTTP server started: http://localhost:{}/".format(http_port))
     httpd.serve_forever()
@@ -85,5 +97,12 @@ def set_stream_server(http_port):
 def play():
     pass
 
-set_stream_server(8000)
+if __name__ == "__main__":
+
+    #devices = get_devices()
+    #print(devices)
+
+    set_stream_server(8000)
+
+
 
