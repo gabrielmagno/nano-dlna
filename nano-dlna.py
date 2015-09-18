@@ -95,6 +95,42 @@ def set_stream_server(http_port):
 
 
 def play():
+
+    # Retrieve metadata from device
+    #"location': 'http://192.168.1.11:37904/MediaRenderer1.xml'
+
+    # Extract URL for AVTransport
+    # root > device > serviceList > service.serviceType == "urn:schemas-upnp-org:service:AVTransport:1" > service.controlURL
+    #<root>
+    #  <device>
+    #    <serviceList>
+    #      <service>
+    #        ...
+    #      </service>
+    #      <service>
+    #        <serviceType>urn:schemas-upnp-org:service:AVTransport:1</serviceType>
+    #        <controlURL>/upnp/control/AVTransport1</controlURL>
+    #      </service>
+    #    </serviceList>
+    #  </device>
+    #</root>
+
+    # HTTP Data
+    # XML template
+    
+    # HTTP Request
+    # { hostname: '192.168.1.11',
+    #   port: '37904',
+    #   path: '/upnp/control/AVTransport1',
+    #   method: 'POST',
+    #   headers: { 
+    #     'Content-Type': 'text/xml; charset="utf-8"',
+    #     'Content-Length': 1792,
+    #     'Connection': 'close',
+    #     'SOAPACTION': '"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI"' 
+    #   } 
+    # }
+
     pass
 
 if __name__ == "__main__":
