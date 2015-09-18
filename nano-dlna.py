@@ -99,10 +99,10 @@ def play():
 
 if __name__ == "__main__":
 
-    #devices = get_devices()
-    #print(devices)
+    devices = get_devices()
+    print(devices)
 
-    set_stream_server(8000)
+    #set_stream_server(8000)
 
 
 
