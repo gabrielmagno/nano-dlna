@@ -4,7 +4,7 @@
     <u:SetAVTransportURI xmlns:u="urn:schemas-upnp-org:service:AVTransport:1">
       <InstanceID>0</InstanceID>
       <CurrentURI>{uri_video}</CurrentURI>
-      <CurrentURIMetaData>{uri_metadata}</CurrentURIMetaData>
+      <CurrentURIMetaData>{metadata}</CurrentURIMetaData>
     </u:SetAVTransportURI>
   </s:Body>
 </s:Envelope>

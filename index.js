@@ -12,7 +12,7 @@ var MediaRendererClient = require('upnp-mediarenderer-client');
 var argv = parseArgs(process.argv.slice(2), 
                      opts = {'default': {
                                  'folder'     : '/var/tmp/nano-dlna',
-                                 'metadata'   : 'data/raw_metadata-default.xml', 
+                                 'metadata'   : 'data/metadata-video_subtitle.xml', 
                                  'file_video' : 'video.avi',
                                  'file_sub'   : 'video.srt',
                                  'file_cover' : 'cover.jpg',

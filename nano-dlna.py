@@ -3,7 +3,11 @@
 
 import os
 import socket
+import re
 import http.server
+import urllib.parse 
+import urllib.request
+import xml.etree.ElementTree as ET
 
 SSDP_BROADCAST_PORT = 1900
 SSDP_BROADCAST_ADDR = "239.255.255.250"
@@ -15,6 +19,9 @@ SSDP_BROADCAST_PARAMS = ["M-SEARCH * HTTP/1.1",
                          "MX: 10",
                          "ST: ssdp:all", "", ""]
 SSDP_BROADCAST_MSG = "\r\n".join(SSDP_BROADCAST_PARAMS)
+
+data_path = "{}data".format(os.path.dirname(__file__))
+
 
 class StreamingHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 
@@ -74,6 +81,13 @@ def get_devices():
 
     devices = [device for device in devices if "AVTransport" in device["st"]]
 
+    for i in range(len(devices)):
+        location = devices[i]["location"]
+        xml = urllib.request.urlopen(location).read().decode("UTF-8")
+        xml = re.sub(" xmlns=\"[^\"]+\"", "", xml, count=1)
+        info = ET.fromstring(xml)
+        devices[i]["info"] = info
+
     return devices
 
 
@@ -94,10 +108,7 @@ def set_stream_server(http_port):
     httpd.serve_forever()
 
 
-def play():
-
-    # Retrieve metadata from device
-    #"location': 'http://192.168.1.11:37904/MediaRenderer1.xml'
+def play(video, device):
 
     # Extract URL for AVTransport
     # root > device > serviceList > service.serviceType == "urn:schemas-upnp-org:service:AVTransport:1" > service.controlURL
@@ -114,6 +125,36 @@ def play():
     #    </serviceList>
     #  </device>
     #</root>
+    if "uri_sub" in video:
+        with open("{}/metadata-video_subtitle.xml".format(data_path), "r") as infile:
+            metadata = infile.read().format(**video)
+    else:
+        metadata = ""
+    video["metadata"] = metadata
+
+    location = urllib.parse.urlparse(device["location"])
+
+    hostname = location.hostname
+    port = location.port
+    path = device["info"].find("./device/serviceList/service/[serviceType='{}']/controlURL".format(device["st"])).text
+
+    url = "http://{}:{}{}".format(hostname, port, path)
+
+    for action in ["SetAVTransportURI", "Play"]:
+        
+        with open("{}/action-{}.xml".format(data_path, action), "r") as infile:
+            data = infile.read().format(**video)
+
+        headers = { 
+          "Content-Type": "text/xml; charset=\"utf-8\"",
+          "Content-Length": "{}".format(len(data)),
+          "Connection": "close",
+          "SOAPACTION": "\"{}#{}\"".format(device["st"], action)
+        } 
+
+        request = urllib.request.Request(url, data, headers)
+        print(url, data, headers)
+        #urllib.request.urlopen(request)
 
     # HTTP Data
     # XML template
@@ -140,5 +181,5 @@ if __name__ == "__main__":
 
     #set_stream_server(8000)
 
-
+    play({"type_video": "mkv", "type_sub": "srt", "uri_sub": "http://127.0.0.1:8000/subtitle.srt", "uri_video": "http://127.0.0.1:8000/subtitle.mkv"}, devices[0])
 
