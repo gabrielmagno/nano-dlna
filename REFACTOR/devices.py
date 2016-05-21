@@ -4,6 +4,7 @@
 import socket
 import re
 import urllib.request
+import urllib.parse
 import xml.etree.ElementTree as ET
 
 SSDP_BROADCAST_PORT = 1900
@@ -46,11 +47,27 @@ def get_devices(timeout=3.0):
     devices = [device for device in devices if "AVTransport" in device["st"]]
 
     for i in range(len(devices)):
-        location = devices[i]["location"]
-        xml = urllib.request.urlopen(location).read().decode("UTF-8")
+
+        location_url = devices[i]["location"]
+        xml = urllib.request.urlopen(location_url).read().decode("UTF-8")
         xml = re.sub(" xmlns=\"[^\"]+\"", "", xml, count=1)
         info = ET.fromstring(xml)
-        devices[i]["info"] = info
+
+        location = urllib.parse.urlparse(location_url)
+        hostname = location.hostname
+        port = location.port
+        path = info.find(
+            "./device/serviceList/service/[serviceType='{}']/controlURL".format(
+                devices[i]["st"]
+            )
+        ).text
+        action_url = "http://{}:{}{}".format(hostname, port, path)
+
+        devices[i].update({
+            "info"      : info,
+            "hostname"  : hostname,
+            "action_url": action_url
+        })
 
     return devices
 
