@@ -44,10 +44,10 @@ var metadata_pretty = metadata_raw.formatUnicorn(uris);
 var metadata = metadata_pretty.replace(/\s{2,}/g, ' ').replace(/> </g, '><').trim();
 console.log(metadata_pretty);
 
-// DLNA connection
-var dlna_client = new MediaRendererClient(argv['media-renderer-url']);
-dlna_client.load(uris['uri_video'], { autoplay: true, metadata: metadata }, function(err, result) {
-    if(err) throw err
-    console.log('playing ...')
-});
+//// DLNA connection
+//var dlna_client = new MediaRendererClient(argv['media-renderer-url']);
+//dlna_client.load(uris['uri_video'], { autoplay: true, metadata: metadata }, function(err, result) {
+//    if(err) throw err
+//    console.log('playing ...')
+//});
 

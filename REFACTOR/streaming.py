@@ -8,72 +8,18 @@ import socket
 import re
 import threading
 
-def copyfileobj(fsrc, fdst, length=16*1024):
-    """copy data from file-like object fsrc to file-like object fdst"""
-    while 1:
-        buf = fsrc.read(length)
-        if not buf:
-            break
-        fdst.write(buf)
-
 
 class StreamingHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 
-    __version___ = "0.1"
+    __version___ = "1.0"
 
-    protocol_version = 'HTTP/1.1'
+    protocol_version = 'HTTP/1.0'
 
     server_version = "StreamingHTTP/" + __version___
 
+    timeout = 10
 
-    def handle_one_request(self):
-        """Handle a single HTTP request.
-
-        You normally don't need to override this method; see the class
-        __doc__ string for information on how to handle specific HTTP
-        commands such as GET and POST.
-
-        """
-        try:
-            print("Esperando...")	
-            self.raw_requestline = self.rfile.readline(65537)
-            print("LIDO: {}\n\n".format(self.raw_requestline))	
-            if len(self.raw_requestline) > 65536:
-                self.requestline = ''
-                self.request_version = ''
-                self.command = ''
-                self.send_error(HTTPStatus.REQUEST_URI_TOO_LONG)
-                return
-            if not self.raw_requestline:
-                self.close_connection = True
-                return
-            if not self.parse_request():
-                # An error code has been sent, just exit
-                return
-            mname = 'do_' + self.command
-            if not hasattr(self, mname):
-                self.send_error(
-                    HTTPStatus.NOT_IMPLEMENTED,
-                    "Unsupported method (%r)" % self.command)
-                return
-            method = getattr(self, mname)
-            method()
-            self.wfile.flush() #actually send the response if not already done.
-        except socket.timeout as e:
-            #a read or a write timed out.  Discard this connection
-            self.log_error("Request timed out: %r", e)
-            self.close_connection = True
-            return
-
-    def handle(self):
-        """Handle multiple requests if necessary."""
-        self.close_connection = True
-
-        self.handle_one_request()
-        while not self.close_connection:
-            self.handle_one_request()
-
-
+    buffer_size = 2*1024*1024
 
 
     def set_files(files):
@@ -87,30 +33,22 @@ class StreamingHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 
     def do_GET(self):
         f, start_range, end_range = self.send_head()
-        print("Range: {} - {} / {}".format(start_range, end_range, (end_range - start_range + 1)))
         if f:
             try:
                 f.seek(start_range, 0)
                 size = end_range - start_range + 1
-
+                
                 buf = f.read(size)
-                print("Leu {}".format(len(buf)))
                 sent = self.wfile.write(buf)
-                print("Enviou {}".format(sent))
 
-                ## TODO: buffered reading
-                #self.wfile.flush()
-                #total = 0
-                #size_total = size
+                ## TODO: improve buffered reading (it is slower than full reading)
                 #while size > 0:
-                #    buf = f.read(min(65551, size))
-                #    total += len(buf)
-                #    print("read {}, total {}, size {} ({:.1f}%)".format(len(buf), total, size, 100*(total/size_total)))
+                #    buf = f.read(min(self.buffer_size, size))
+                #    size -= len(buf)
                 #    if not buf:
                 #        break
-                #    size -= len(buf)
                 #    self.wfile.write(buf)
-                #    self.wfile.flush()
+
             finally:
                 f.close()
 
@@ -159,10 +97,7 @@ class StreamingHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.send_header("Last-Modified", self.date_time_string(fs.st_mtime))
             self.send_header("Content-type", ctype)
             self.send_header("Content-Length", str(size_partial))
-            self.close_connection = True
-            #self.send_header("Connection", "keep-alive")
             self.end_headers()
-            self.wfile.flush()
             return (f, start_range, end_range)
         except:
             f.close()
