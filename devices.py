@@ -61,7 +61,7 @@ def get_devices(timeout=3.0):
                 devices[i]["st"]
             )
         ).text
-        action_url = "http://{}:{}{}".format(hostname, port, path)
+        action_url = urllib.parse.urljoin(location_url, path)
 
         devices[i].update({
             "info"      : info,
@@ -74,6 +74,14 @@ def get_devices(timeout=3.0):
 
 if __name__ == "__main__":
 
-    devices = get_devices()
-    print(devices)
+    import sys
+    import json
+
+    timeout = int(sys.argv[1]) if len(sys.argv) >= 2  else 5
+
+    devices = get_devices(timeout)
+
+    for i, device in enumerate(devices, 1):
+        device["info"] = "..."
+        print("Device {}:\n{}\n\n".format(i, json.dumps(device, indent=4)))
 

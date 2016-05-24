@@ -7,7 +7,7 @@ import urllib.parse
 import urllib.request
 import html
 
-data_path = "../data"
+data_path = "data"
 
 def send_dlna_action(device, data, action):
 

@@ -13,11 +13,12 @@ class StreamingHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 
     __version___ = "1.0"
 
-    protocol_version = 'HTTP/1.0'
+    protocol_version = 'HTTP/1.1'
 
     server_version = "StreamingHTTP/" + __version___
 
-    timeout = 10
+    #timeout = 10
+    #timeout = 2
 
     buffer_size = 2*1024*1024
 
@@ -38,16 +39,16 @@ class StreamingHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
                 f.seek(start_range, 0)
                 size = end_range - start_range + 1
                 
-                buf = f.read(size)
-                sent = self.wfile.write(buf)
+                #buf = f.read(size)
+                #sent = self.wfile.write(buf)
 
-                ## TODO: improve buffered reading (it is slower than full reading)
-                #while size > 0:
-                #    buf = f.read(min(self.buffer_size, size))
-                #    size -= len(buf)
-                #    if not buf:
-                #        break
-                #    self.wfile.write(buf)
+                # TODO: improve buffered reading (it is slower than full reading)
+                while size > 0:
+                    buf = f.read(min(self.buffer_size, size))
+                    size -= len(buf)
+                    if not buf:
+                        break
+                    self.wfile.write(buf)
 
             finally:
                 f.close()
@@ -93,10 +94,11 @@ class StreamingHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_response(HTTPStatus.OK)
  
             self.send_header("Accept-Ranges", "bytes")
-            self.send_header("Cache-Control", "public, max-age=0")
+            #self.send_header("Cache-Control", "public, max-age=0")
             self.send_header("Last-Modified", self.date_time_string(fs.st_mtime))
             self.send_header("Content-type", ctype)
             self.send_header("Content-Length", str(size_partial))
+            self.send_header("Connection", "close")
             self.end_headers()
             return (f, start_range, end_range)
         except:
