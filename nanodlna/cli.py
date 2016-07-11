@@ -4,10 +4,7 @@ import sys
 import os
 import argparse
 
-import devices
-import streaming
-import dlna
-
+from . import *
 
 def get_subtitle(file_video):
 
