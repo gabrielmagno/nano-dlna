@@ -9,24 +9,31 @@ from twisted.web.server import Site
 from twisted.web.static import File
 from twisted.web.resource import Resource
 from twisted.internet import reactor
+from twisted.python import log
 
 
-def set_files(files):
+def set_files(files, serve_ip, serve_port):
+
     files_index = { file_key : ( os.path.basename(file_path), 
                                  os.path.abspath(file_path),
                                  os.path.dirname(os.path.abspath(file_path)))
                              for file_key, file_path in files.items() }
+
     files_serve = { file_name : file_path 
                         for file_name, file_path, file_dir in files_index.values() }
-    return files_index, files_serve
+
+    files_urls = { file_key : "http://{}:{}/{}/{}".format(serve_ip, serve_port, file_key, file_name) 
+                       for file_key, (file_name, file_path, file_dir) in files_index.items() }
+
+    return files_index, files_serve, files_urls
 
 
 def start_server(files, serve_ip, serve_port=9000):
 
-    files_index, files_serve = set_files(files)
+    import sys
+    #log.startLogging(sys.stdout)
 
-    files_urls = { file_key : "http://{}:{}/{}/{}".format(serve_ip, serve_port, file_key, file_name) 
-                       for file_key, (file_name, file_path, file_dir) in files_index.items() }
+    files_index, files_serve, files_urls = set_files(files, serve_ip, serve_port)
 
     root = Resource()
     for file_key, (file_name, file_path, file_dir) in files_index.items():
