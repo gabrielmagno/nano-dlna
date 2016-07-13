@@ -18,6 +18,37 @@ SSDP_BROADCAST_PARAMS = ["M-SEARCH * HTTP/1.1",
                          "ST: ssdp:all", "", ""]
 SSDP_BROADCAST_MSG = "\r\n".join(SSDP_BROADCAST_PARAMS)
 
+UPNP_DEFAULT_SERVICE_TYPE = "urn:schemas-upnp-org:service:AVTransport:1"
+
+
+def register_device(location_url):
+
+    xml = urllib.request.urlopen(location_url).read().decode("UTF-8")
+    xml = re.sub(" xmlns=\"[^\"]+\"", "", xml, count=1)
+    info = ET.fromstring(xml)
+
+    location = urllib.parse.urlparse(location_url)
+    hostname = location.hostname
+
+    friendly_name = info.find("./device/friendlyName").text
+
+    path = info.find(
+        "./device/serviceList/service/[serviceType='{}']/controlURL".format(
+            UPNP_DEFAULT_SERVICE_TYPE
+        )
+    ).text
+    action_url = urllib.parse.urljoin(location_url, path)
+
+    device = {
+        "location"      : location_url,
+        "hostname"      : hostname,
+        "friendly_name" : friendly_name,
+        "action_url"    : action_url,
+        "st"            : UPNP_DEFAULT_SERVICE_TYPE
+    }
+
+    return device
+
 
 def get_devices(timeout=3.0):
 
@@ -44,30 +75,8 @@ def get_devices(timeout=3.0):
         except:
             pass
 
-    devices = [device for device in devices if "AVTransport" in device["st"]]
-
-    for i in range(len(devices)):
-
-        location_url = devices[i]["location"]
-        xml = urllib.request.urlopen(location_url).read().decode("UTF-8")
-        xml = re.sub(" xmlns=\"[^\"]+\"", "", xml, count=1)
-        info = ET.fromstring(xml)
-
-        location = urllib.parse.urlparse(location_url)
-        hostname = location.hostname
-        port = location.port
-        path = info.find(
-            "./device/serviceList/service/[serviceType='{}']/controlURL".format(
-                devices[i]["st"]
-            )
-        ).text
-        action_url = urllib.parse.urljoin(location_url, path)
-
-        devices[i].update({
-            "info"      : info,
-            "hostname"  : hostname,
-            "action_url": action_url
-        })
+    devices_urls = [device["location"] for device in devices if "AVTransport" in device["st"]]
+    devices = [register_device(location_url) for location_url in devices_urls]
 
     return devices
 
@@ -82,6 +91,5 @@ if __name__ == "__main__":
     devices = get_devices(timeout)
 
     for i, device in enumerate(devices, 1):
-        device["info"] = "..."
         print("Device {}:\n{}\n\n".format(i, json.dumps(device, indent=4)))
 

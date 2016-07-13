@@ -24,7 +24,6 @@ def list_devices(args):
     my_devices = devices.get_devices(args.timeout)
 
     for i, device in enumerate(my_devices, 1):
-        device["info"] = "..."
         print("Device {}:\n{}\n\n".format(i, json.dumps(device, indent=4)))
 
 
