@@ -40,9 +40,9 @@ setup(
     #    'Topic :: Software Development :: Libraries :: Python Modules',
     #    'Topic :: Utilities'
     #],
-    packages=[
-        'nanodlna',
-    ],
+    packages=['nanodlna'],
+    package_dir={'nanodlna': 'nanodlna'},
+    package_data={'nanodlna': ['templates/*.xml']},
     entry_points={
         'console_scripts': [
             'nanodlna = nanodlna.cli:run',

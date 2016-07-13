@@ -6,13 +6,13 @@ import http.server
 import urllib.parse 
 import urllib.request
 import html
+import pkgutil
 
-data_path = "data"
 
 def send_dlna_action(device, data, action):
 
-    with open("{}/action-{}.xml".format(data_path, action), "r") as infile:
-        action_data = infile.read().format(**data).encode("UTF-8")
+    action_data = pkgutil.get_data("nanodlna", "templates/action-{}.xml".format(action)).decode("UTF-8")
+    action_data = action_data.format(**data).encode("UTF-8")
 
     headers = { 
       "Content-Type"   : "text/xml; charset=\"utf-8\"",
@@ -39,8 +39,8 @@ def play(files_urls, device):
             "type_sub"   : os.path.splitext(files_urls["file_subtitle"])[1][1:]
         })
 
-        with open("{}/metadata-video_subtitle.xml".format(data_path), "r") as infile:
-            video_data["metadata"] = html.escape(infile.read().format(**video_data))
+        metadata = pkgutil.get_data("nanodlna", "templates/metadata-video_subtitle.xml").decode("UTF-8")
+        video_data["metadata"] = html.escape(metadata.format(**video_data))
 
     else:
         video_data["metadata"] = ""
