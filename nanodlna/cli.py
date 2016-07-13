@@ -3,8 +3,9 @@
 import sys
 import os
 import argparse
+import json
 
-from . import *
+from nanodlna import *
 
 def get_subtitle(file_video):
 
@@ -47,7 +48,7 @@ def play(args):
     my_devices = devices.get_devices(args.timeout)
 
     if len(my_devices) > 0:
-        if len(args.device_query) > 0:
+        if args.device_query:
             device = [ device for device in my_devices 
                            if args.device_query in str(device).lower() ][0]
         else:
