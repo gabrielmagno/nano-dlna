@@ -3,6 +3,8 @@ nano-dlna
 
 A minimal UPnP/DLNA media streamer.
 
+nano-dlna is a command line tool that allows you to play a local video file in your TV (or any other DLNA compatible device).
+
 
 Usage
 -----
@@ -34,7 +36,7 @@ How does `list` work?
 
 1. Issue an SSDP M-Search broadcast message in the network
 2. Capture the responses and register the devices
-3. Filter only devices that provide UPnP's AVTransport service ()[http://www.upnp.org/specs/av/UPnP-av-AVTransport-v3-Service-20101231.pdf].
+3. Filter only devices that provide [UPnP's AVTransport service](http://www.upnp.org/specs/av/UPnP-av-AVTransport-v3-Service-20101231.pdf)
 
 
 How does `play` work?
