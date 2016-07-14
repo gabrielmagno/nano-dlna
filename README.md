@@ -18,8 +18,7 @@ Usage
 
 ### List
 
-
-List the available devices in my network:
+Scan compatible devices and list the available ones:
 
     nanodlna list
 
