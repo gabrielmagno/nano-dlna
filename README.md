@@ -23,27 +23,6 @@ List the available devices in my network:
 
     nanodlna list
 
-```
-Device 1:
-{
-    "location": "http://192.168.1.11:37904/MediaRenderer1.xml",
-    "friendly_name": "32LV5500-SD",
-    "action_url": "http://192.168.1.11:37904/upnp/control/AVTransport1",
-    "hostname": "192.168.1.11",
-    "st": "urn:schemas-upnp-org:service:AVTransport:1"
-}
-
-
-Device 2:
-{
-    "location": "http://192.168.1.13:1082/",
-    "friendly_name": "osmc",
-    "action_url": "http://192.168.1.13:1082/AVTransport/e8dcdde7-2c9f-75a6-7351-494522884cd2/control.xml",
-    "hostname": "192.168.1.13",
-    "st": "urn:schemas-upnp-org:service:AVTransport:1"
-}
-```
-
 If your device is not being listed, you might need to increase the search timeout:
 
 	nanodlna -t 20 list
@@ -53,9 +32,9 @@ If your device is not being listed, you might need to increase the search timeou
 
 Play a video, automatically loading the subtitles if available, selecting a random device:
 
-    nanodlna play That.Movie.1989.1080p.BluRay.x264.HuE.mkv
+    nanodlna play That.Movie.mkv
 
-Play a video, specifying the device through query (scan for devices before playing):
+Play a video, specifying the device through query (scan devices before playing):
 
     nanodlna play That.Movie.mkv -q "osmc"
 
