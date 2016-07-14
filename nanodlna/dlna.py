@@ -32,7 +32,7 @@ def play(files_urls, device):
         "type_video" : os.path.splitext(files_urls["file_video"])[1][1:],
     }
 
-    if "file_subtitle" in files_urls:
+    if "file_subtitle" in files_urls and files_urls["file_subtitle"]:
 
         video_data.update({
             "uri_sub"    : files_urls["file_subtitle"],

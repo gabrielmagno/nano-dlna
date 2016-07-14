@@ -38,22 +38,24 @@ def play(args):
         if not args.file_subtitle:
             args.file_subtitle = get_subtitle(args.file_video)
 
-        if args.file_subtitle:
-            files["file_subtitle"] = args.file_subtitle
+        files["file_subtitle"] = args.file_subtitle
 
 
     # Select device to play
 
-    my_devices = devices.get_devices(args.timeout)
-
-    if len(my_devices) > 0:
-        if args.device_query:
-            device = [ device for device in my_devices 
-                           if args.device_query in str(device).lower() ][0]
-        else:
-            device = my_devices[0]
+    if args.device_url:
+        device = devices.register_device(args.device_url)
     else:
-        sys.exit("No devices found.")
+        my_devices = devices.get_devices(args.timeout)
+
+        if len(my_devices) > 0:
+            if args.device_query:
+                device = [ device for device in my_devices 
+                               if args.device_query in str(device).lower() ][0]
+            else:
+                device = my_devices[0]
+        else:
+            sys.exit("No devices found.")
 
 
     # Configure streaming server
@@ -78,7 +80,8 @@ def run():
     p_list.set_defaults(func=list_devices)
 
     p_play = subparsers.add_parser('play')
-    p_play.add_argument("-d", "--device", dest="device_query")
+    p_play.add_argument("-d", "--device", dest="device_url")
+    p_play.add_argument("-q", "--query-device", dest="device_query")
     p_play.add_argument("-s", "--subtitle", dest="file_subtitle")
     p_play.add_argument("-n", "--no-subtitle", dest="use_subtitle", action="store_false")
     p_play.add_argument("file_video")
