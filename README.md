@@ -6,17 +6,63 @@ A minimal UPnP/DLNA media streamer.
 nano-dlna is a command line tool that allows you to play a local video file in your TV (or any other DLNA compatible device).
 
 
-Usage
------
-
-    nanodlna play That.Movie.1989.1080p.BluRay.x264.HuE.mkv
-
-
 Features
 --------
 - Searching available DLNA devices in the local network
 - Streaming audio
 - Streaming video, with subtitle support
+
+
+Usage
+-----
+
+### List
+
+
+List the available devices in my network:
+
+    nanodlna list
+
+```
+Device 1:
+{
+    "location": "http://192.168.1.11:37904/MediaRenderer1.xml",
+    "friendly_name": "32LV5500-SD",
+    "action_url": "http://192.168.1.11:37904/upnp/control/AVTransport1",
+    "hostname": "192.168.1.11",
+    "st": "urn:schemas-upnp-org:service:AVTransport:1"
+}
+
+
+Device 2:
+{
+    "location": "http://192.168.1.13:1082/",
+    "friendly_name": "osmc",
+    "action_url": "http://192.168.1.13:1082/AVTransport/e8dcdde7-2c9f-75a6-7351-494522884cd2/control.xml",
+    "hostname": "192.168.1.13",
+    "st": "urn:schemas-upnp-org:service:AVTransport:1"
+}
+```
+
+If your device is not being listed, you might need to increase the search timeout:
+
+	nanodlna -t 20 list
+
+
+### Play
+
+Play a video, automatically loading the subtitles if available, selecting a random device:
+
+    nanodlna play That.Movie.1989.1080p.BluRay.x264.HuE.mkv
+
+Play a video, specifying the device through query (scan for devices before playing):
+
+    nanodlna play That.Movie.mkv -q "osmc"
+
+Play a video, specifying the device through its exact location (no scan, faster):
+
+    nanodlna play That.Movie.mkv -d "http://192.168.1.13:1082/"
+
 
 
 Installation
