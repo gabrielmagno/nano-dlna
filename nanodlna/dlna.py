@@ -9,7 +9,7 @@ else:
     import urllib2 as urllibreq
 
 import os
-import html
+from xml.sax.saxutils import escape as xmlescape
 import pkgutil
 
 
@@ -44,7 +44,7 @@ def play(files_urls, device):
         })
 
         metadata = pkgutil.get_data("nanodlna", "templates/metadata-video_subtitle.xml").decode("UTF-8")
-        video_data["metadata"] = html.escape(metadata.format(**video_data))
+        video_data["metadata"] = xmlescape(metadata.format(**video_data))
 
     else:
         video_data["metadata"] = ""
