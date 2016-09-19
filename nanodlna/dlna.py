@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 # encoding: UTF-8
 
-try:
+import sys
+
+if sys.version_info.major == 3:
     import urllib.request as urllibreq
-except ImportError:
+else:
     import urllib2 as urllibreq
 
 import os

@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 # encoding: UTF-8
 
+import sys
 import socket
 import re
 
-try:
+if sys.version_info.major == 3:
     import urllib.request as urllibreq
     import urllib.parse as urllibparse
-except ImportError:
+else:
     import urllib2 as urllibreq
     import urlparse as urllibparse
 
