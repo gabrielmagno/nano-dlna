@@ -2,6 +2,8 @@ nano-dlna
 =========
 
 [![Build Status](https://travis-ci.org/gabrielmagno/nano-dlna.svg?branch=master)](https://travis-ci.org/gabrielmagno/nano-dlna)
+[![PyPI](https://img.shields.io/pypi/v/nanodlna.svg)](https://pypi.python.org/pypi/nanodlna)
+[![License](https://img.shields.io/github/license/gabrielmagno/nano-dlna.svg)](https://github.com/gabrielmagno/nano-dlna/blob/master/LICENSE)
 
 A minimal UPnP/DLNA media streamer.
 
