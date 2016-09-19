@@ -40,7 +40,8 @@ def play(args):
         if not args.file_subtitle:
             args.file_subtitle = get_subtitle(args.file_video)
 
-        files["file_subtitle"] = args.file_subtitle
+        if args.file_subtitle:
+            files["file_subtitle"] = args.file_subtitle
 
 
     # Select device to play
