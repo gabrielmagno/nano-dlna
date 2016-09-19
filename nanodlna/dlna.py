@@ -9,7 +9,6 @@ else:
     import urllib2 as urllibreq
 
 import os
-import http.server
 import html
 import pkgutil
 
