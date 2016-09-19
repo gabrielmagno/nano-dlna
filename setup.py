@@ -7,6 +7,9 @@ install_requires = [
     'Twisted>=16.2.0',
 ]
 
+if sys.version_info.major == 2:
+    install_requires.append("service_identity>=16.0.0")
+
 setup(
     name='nanodlna',
     version='0.1.1',
