@@ -1,6 +1,8 @@
 nano-dlna
 =========
 
+[![Build Status](https://travis-ci.org/gabrielmagno/nano-dlna.svg?branch=master)](https://travis-ci.org/gabrielmagno/nano-dlna)
+
 A minimal UPnP/DLNA media streamer.
 
 nano-dlna is a command line tool that allows you to play a local video file in your TV (or any other DLNA compatible device).
