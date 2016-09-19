@@ -12,7 +12,7 @@ if sys.version_info.major == 2:
 
 setup(
     name='nanodlna',
-    version='0.1.3',
+    version='0.1.4',
     description='A minimal UPnP/DLNA media streamer',
     long_description='nano-dlna is a command line tool that allows you to play a local video file in your TV (or any other DLNA compatible device)',
     author='Gabriel Magno',
