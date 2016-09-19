@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 # encoding: UTF-8
 
+try:
+    import urllib.request as urllibreq
+except ImportError:
+    import urllib2 as urllibreq
+
 import os
 import http.server
-import urllib.parse 
-import urllib.request
 import html
 import pkgutil
 
@@ -21,8 +24,8 @@ def send_dlna_action(device, data, action):
       "SOAPACTION"     : "\"{}#{}\"".format(device["st"], action)
     } 
 
-    request = urllib.request.Request(device["action_url"], action_data, headers)
-    urllib.request.urlopen(request)
+    request = urllibreq.Request(device["action_url"], action_data, headers)
+    urllibreq.urlopen(request)
 
 
 def play(files_urls, device):
