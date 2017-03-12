@@ -54,7 +54,7 @@ def play(args):
         if len(my_devices) > 0:
             if args.device_query:
                 device = [ device for device in my_devices 
-                               if args.device_query in str(device).lower() ][0]
+                               if args.device_query.lower() in str(device).lower() ][0]
             else:
                 device = my_devices[0]
         else:
