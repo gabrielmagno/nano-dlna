@@ -9,7 +9,7 @@ matrix:
   fast_finish: true
 cache: pip
 install:
-  - pip install -e .
+  - pip install .
   - pip install flake8
 script:
   - nanodlna list
