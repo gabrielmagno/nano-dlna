@@ -15,14 +15,14 @@ else:
 def send_dlna_action(device, data, action):
 
     action_data = pkgutil.get_data(
-        "nanodlna", "templates/action-{}.xml".format(action)).decode("UTF-8")
+        "nanodlna", "templates/action-{0}.xml".format(action)).decode("UTF-8")
     action_data = action_data.format(**data).encode("UTF-8")
 
     headers = {
         "Content-Type": "text/xml; charset=\"utf-8\"",
-        "Content-Length": "{}".format(len(action_data)),
+        "Content-Length": "{0}".format(len(action_data)),
         "Connection": "close",
-        "SOAPACTION": "\"{}#{}\"".format(device["st"], action)
+        "SOAPACTION": "\"{0}#{1}\"".format(device["st"], action)
     }
 
     request = urllibreq.Request(device["action_url"], action_data, headers)

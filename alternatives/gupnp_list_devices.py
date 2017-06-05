@@ -2,7 +2,7 @@ from gi.repository import GLib, GUPnP
 
 
 def device_available(cp, proxy):
-    print ("Found " + proxy.get_friendly_name())
+    print("Found " + proxy.get_friendly_name())
 
 
 ctx = GUPnP.Context.new(None, "wlp3s0", 0)

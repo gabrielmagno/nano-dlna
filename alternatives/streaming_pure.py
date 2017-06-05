@@ -85,7 +85,7 @@ class StreamingHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_response(HTTPStatus.PARTIAL_CONTENT)
                 self.send_header(
                     "Content-Range",
-                    "bytes {}-{}/{}".format(start_range, end_range, size_full))
+                    "bytes {0}-{1}/{2}".format(start_range, end_range, size_full))
 
             else:
                 start_range = 0
@@ -118,7 +118,7 @@ def start_server(files, serve_ip, serve_port=9000):
     threading.Thread(target=httpd.serve_forever).start()
 
     files_urls = {
-        file_key: "http://{}:{}/{}".format(serve_ip, serve_port, file_name)
+        file_key: "http://{0}:{1}/{2}".format(serve_ip, serve_port, file_name)
         for file_key, (file_name, file_path) in httph.files_index.items()}
 
     return files_urls
@@ -136,7 +136,7 @@ if __name__ == "__main__":
 
     import sys
 
-    files = {"file_{}".format(i): file_path for i,
+    files = {"file_{0}".format(i): file_path for i,
              file_path in enumerate(sys.argv[1:], 1)}
 
     start_server(files, "localhost")

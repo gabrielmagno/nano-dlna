@@ -14,7 +14,7 @@ def get_subtitle(file_video):
 
     video, extension = os.path.splitext(file_video)
 
-    file_subtitle = "{}.srt".format(video)
+    file_subtitle = "{0}.srt".format(video)
 
     if os.path.exists(file_subtitle):
         return file_subtitle
@@ -27,7 +27,7 @@ def list_devices(args):
     my_devices = devices.get_devices(args.timeout)
 
     for i, device in enumerate(my_devices, 1):
-        print("Device {}:\n{}\n\n".format(i, json.dumps(device, indent=4)))
+        print("Device {0}:\n{1}\n\n".format(i, json.dumps(device, indent=4)))
 
 
 def play(args):

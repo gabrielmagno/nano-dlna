@@ -23,7 +23,7 @@ def set_files(files, serve_ip, serve_port):
     files_serve = {file_name: file_path
                    for file_name, file_path, file_dir in files_index.values()}
 
-    files_urls = {file_key: "http://{}:{}/{}/{}".format(
+    files_urls = {file_key: "http://{0}:{1}/{2}/{3}".format(
         serve_ip, serve_port, file_key, file_name) for file_key,
         (file_name, file_path, file_dir) in files_index.items()}
 
@@ -63,7 +63,7 @@ if __name__ == "__main__":
 
     import sys
 
-    files = {"file_{}".format(i): file_path for i,
+    files = {"file_{0}".format(i): file_path for i,
              file_path in enumerate(sys.argv[1:], 1)}
     print(files)
 

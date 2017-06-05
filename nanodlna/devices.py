@@ -18,7 +18,7 @@ SSDP_BROADCAST_PORT = 1900
 SSDP_BROADCAST_ADDR = "239.255.255.250"
 
 SSDP_BROADCAST_PARAMS = ["M-SEARCH * HTTP/1.1",
-                         "HOST: {}:{}".format(SSDP_BROADCAST_ADDR,
+                         "HOST: {0}:{1}".format(SSDP_BROADCAST_ADDR,
                                               SSDP_BROADCAST_PORT),
                          "MAN: \"ssdp:discover\"",
                          "MX: 10",
@@ -40,7 +40,7 @@ def register_device(location_url):
     friendly_name = info.find("./device/friendlyName").text
 
     path = info.find(
-        "./device/serviceList/service/[serviceType='{}']/controlURL".format(
+        "./device/serviceList/service/[serviceType='{0}']/controlURL".format(
             UPNP_DEFAULT_SERVICE_TYPE
         )
     ).text
@@ -102,4 +102,4 @@ if __name__ == "__main__":
     devices = get_devices(timeout)
 
     for i, device in enumerate(devices, 1):
-        print("Device {}:\n{}\n\n".format(i, json.dumps(device, indent=4)))
+        print("Device {0}:\n{1}\n\n".format(i, json.dumps(device, indent=4)))
