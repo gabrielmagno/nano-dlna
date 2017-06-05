@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # encoding: UTF-8
 
-import os
 import http.server
-from http import HTTPStatus
-import socket
+import os
 import re
+import socket
 import threading
+from http import HTTPStatus
 
 
 class StreamingHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
@@ -17,20 +17,18 @@ class StreamingHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 
     server_version = "StreamingHTTP/" + __version___
 
-    #timeout = 10
-    #timeout = 2
+    # timeout = 10
+    # timeout = 2
 
-    buffer_size = 2*1024*1024
-
+    buffer_size = 2 * 1024 * 1024
 
     def set_files(files):
-        files_index = { file_key : ( os.path.basename(file_path), 
-                                     os.path.abspath(file_path)  )
-                                 for file_key, file_path in files.items() }
-        files_serve = { file_name : file_path 
-                            for file_name, file_path in files_index.values() }
+        files_index = {file_key: (os.path.basename(file_path),
+                                  os.path.abspath(file_path))
+                       for file_key, file_path in files.items()}
+        files_serve = {file_name: file_path
+                       for file_name, file_path in files_index.values()}
         return files_index, files_serve
-
 
     def do_GET(self):
         f, start_range, end_range = self.send_head()
@@ -38,11 +36,12 @@ class StreamingHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
             try:
                 f.seek(start_range, 0)
                 size = end_range - start_range + 1
-                
-                #buf = f.read(size)
-                #sent = self.wfile.write(buf)
 
-                # TODO: improve buffered reading (it is slower than full reading)
+                # buf = f.read(size)
+                # sent = self.wfile.write(buf)
+
+                # TODO: improve buffered reading (it is slower than full
+                # reading)
                 while size > 0:
                     buf = f.read(min(self.buffer_size, size))
                     size -= len(buf)
@@ -59,32 +58,34 @@ class StreamingHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
             f.close()
 
     def send_head(self):
-        file_name = self.path[1:] 
+        file_name = self.path[1:]
         ctype = self.guess_type(file_name)
         f = None
 
         try:
-            file_path = self.files_serve[file_name] 
+            file_path = self.files_serve[file_name]
             f = open(file_path, 'rb')
-        except:
+        except Exception:
             self.send_error(HTTPStatus.NOT_FOUND, "File not found")
             return (None, 0, 0)
-        
+
         try:
             fs = os.fstat(f.fileno())
-            size_full = fs[6] 
+            size_full = fs[6]
 
             if "Range" in self.headers:
-                range_value = re.search("bytes=(?P<start>\d+)?-(?P<end>\d+)?", 
+                range_value = re.search("bytes=(?P<start>\d+)?-(?P<end>\d+)?",
                                         self.headers["Range"])
                 start_range = max(int(range_value.group("start") or 0), 0)
-                end_range = min(int(range_value.group("end") or (size_full - 1)), (size_full -1))
+                end_range = min(int(range_value.group("end")
+                                    or (size_full - 1)), (size_full - 1))
                 size_partial = end_range - start_range + 1
                 assert size_partial > 0
 
                 self.send_response(HTTPStatus.PARTIAL_CONTENT)
-                self.send_header("Content-Range", 
-                                 "bytes {}-{}/{}".format(start_range, end_range, size_full))
+                self.send_header(
+                    "Content-Range",
+                    "bytes {}-{}/{}".format(start_range, end_range, size_full))
 
             else:
                 start_range = 0
@@ -92,16 +93,17 @@ class StreamingHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
                 size_partial = size_full
 
                 self.send_response(HTTPStatus.OK)
- 
+
             self.send_header("Accept-Ranges", "bytes")
-            #self.send_header("Cache-Control", "public, max-age=0")
-            self.send_header("Last-Modified", self.date_time_string(fs.st_mtime))
+            # self.send_header("Cache-Control", "public, max-age=0")
+            self.send_header(
+                "Last-Modified", self.date_time_string(fs.st_mtime))
             self.send_header("Content-type", ctype)
             self.send_header("Content-Length", str(size_partial))
             self.send_header("Connection", "close")
             self.end_headers()
             return (f, start_range, end_range)
-        except:
+        except Exception:
             f.close()
             raise
 
@@ -109,13 +111,15 @@ class StreamingHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 def start_server(files, serve_ip, serve_port=9000):
 
     httph = StreamingHTTPRequestHandler
-    httph.files_index, httph.files_serve = StreamingHTTPRequestHandler.set_files(files)
+    httph_files = StreamingHTTPRequestHandler.set_files(files)
+    httph.files_index, httph.files_serve = httph_files
 
     httpd = http.server.HTTPServer((serve_ip, serve_port), httph)
     threading.Thread(target=httpd.serve_forever).start()
 
-    files_urls = { file_key : "http://{}:{}/{}".format(serve_ip, serve_port, file_name) 
-                       for file_key, (file_name, file_path) in httph.files_index.items() }
+    files_urls = {
+        file_key: "http://{}:{}/{}".format(serve_ip, serve_port, file_name)
+        for file_key, (file_name, file_path) in httph.files_index.items()}
 
     return files_urls
 
@@ -132,7 +136,7 @@ if __name__ == "__main__":
 
     import sys
 
-    files = {"file_{}".format(i) : file_path  for i, file_path in enumerate(sys.argv[1:], 1)} 
+    files = {"file_{}".format(i): file_path for i,
+             file_path in enumerate(sys.argv[1:], 1)}
 
     start_server(files, "localhost")
-

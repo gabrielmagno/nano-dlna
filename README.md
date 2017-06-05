@@ -28,7 +28,7 @@ Scan compatible devices and list the available ones:
 
 If your device is not being listed, you might need to increase the search timeout:
 
-	nanodlna -t 20 list
+    nanodlna -t 20 list
 
 
 ### Play
@@ -58,7 +58,7 @@ nano-dlna can be installed as a regular python module by running:
 Technical Details
 -----------------
 
-nano-dlna is basically a one-file DLNA MediaServer and a self DLNA MediaController. 
+nano-dlna is basically a one-file DLNA MediaServer and a self DLNA MediaController.
 
 How does `list` work?
 

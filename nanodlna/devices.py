@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # encoding: UTF-8
 
-import sys
-import socket
 import re
+import socket
+import sys
+import xml.etree.ElementTree as ET
 
 if sys.version_info.major == 3:
     import urllib.request as urllibreq
@@ -11,8 +12,6 @@ if sys.version_info.major == 3:
 else:
     import urllib2 as urllibreq
     import urlparse as urllibparse
-
-import xml.etree.ElementTree as ET
 
 
 SSDP_BROADCAST_PORT = 1900
@@ -48,11 +47,11 @@ def register_device(location_url):
     action_url = urllibparse.urljoin(location_url, path)
 
     device = {
-        "location"      : location_url,
-        "hostname"      : hostname,
-        "friendly_name" : friendly_name,
-        "action_url"    : action_url,
-        "st"            : UPNP_DEFAULT_SERVICE_TYPE
+        "location": location_url,
+        "hostname": hostname,
+        "friendly_name": friendly_name,
+        "action_url": action_url,
+        "st": UPNP_DEFAULT_SERVICE_TYPE
     }
 
     return device
@@ -62,13 +61,13 @@ def get_devices(timeout=3.0):
 
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
     s.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 4)
-    s.bind(("", SSDP_BROADCAST_PORT+10))
-    
-    s.sendto(SSDP_BROADCAST_MSG.encode("UTF-8"), (SSDP_BROADCAST_ADDR, 
+    s.bind(("", SSDP_BROADCAST_PORT + 10))
+
+    s.sendto(SSDP_BROADCAST_MSG.encode("UTF-8"), (SSDP_BROADCAST_ADDR,
                                                   SSDP_BROADCAST_PORT))
 
     s.settimeout(timeout)
-    
+
     devices = []
     while True:
 
@@ -78,13 +77,16 @@ def get_devices(timeout=3.0):
             break
 
         try:
-            info = [a.split(":", 1) for a in data.decode("UTF-8").split("\r\n")[1:]]
-            device = dict([(a[0].strip().lower(), a[1].strip()) for a in info if len(a) >= 2])
+            info = [a.split(":", 1)
+                    for a in data.decode("UTF-8").split("\r\n")[1:]]
+            device = dict([(a[0].strip().lower(), a[1].strip())
+                           for a in info if len(a) >= 2])
             devices.append(device)
-        except:
+        except Exception:
             pass
 
-    devices_urls = [device["location"] for device in devices if "AVTransport" in device["st"]]
+    devices_urls = [dev["location"]
+                    for dev in devices if "AVTransport" in dev["st"]]
     devices = [register_device(location_url) for location_url in devices_urls]
 
     return devices
@@ -95,10 +97,9 @@ if __name__ == "__main__":
     import sys
     import json
 
-    timeout = int(sys.argv[1]) if len(sys.argv) >= 2  else 5
+    timeout = int(sys.argv[1]) if len(sys.argv) >= 2 else 5
 
     devices = get_devices(timeout)
 
     for i, device in enumerate(devices, 1):
         print("Device {}:\n{}\n\n".format(i, json.dumps(device, indent=4)))
-

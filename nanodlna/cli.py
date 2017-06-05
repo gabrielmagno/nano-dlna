@@ -2,12 +2,13 @@
 
 from __future__ import print_function
 
-import sys
-import os
 import argparse
 import json
+import os
+import sys
 
-from nanodlna import *
+from . import devices, dlna, streaming
+
 
 def get_subtitle(file_video):
 
@@ -19,7 +20,7 @@ def get_subtitle(file_video):
         return file_subtitle
     else:
         return None
-    
+
 
 def list_devices(args):
 
@@ -33,7 +34,7 @@ def play(args):
 
     # Get video and subtitle file names
 
-    files = { "file_video" : args.file_video }
+    files = {"file_video": args.file_video}
 
     if args.use_subtitle:
 
@@ -43,8 +44,8 @@ def play(args):
         if args.file_subtitle:
             files["file_subtitle"] = args.file_subtitle
 
-
     # Select device to play
+    device = None
 
     if args.device_url:
         device = devices.register_device(args.device_url)
@@ -53,13 +54,14 @@ def play(args):
 
         if len(my_devices) > 0:
             if args.device_query:
-                device = [ device for device in my_devices 
-                               if args.device_query.lower() in str(device).lower() ][0]
+                device = [
+                    device for device in my_devices
+                    if args.device_query.lower() in str(device).lower()][0]
             else:
                 device = my_devices[0]
-        else:
-            sys.exit("No devices found.")
 
+    if not device:
+        sys.exit("No devices found.")
 
     # Configure streaming server
 
@@ -67,15 +69,15 @@ def play(args):
     serve_ip = streaming.get_serve_ip(target_ip)
     files_urls = streaming.start_server(files, serve_ip)
 
-
-    # Play the video through DLNA protocol 
+    # Play the video through DLNA protocol
 
     dlna.play(files_urls, device)
 
 
 def run():
 
-    parser = argparse.ArgumentParser(description="A minimal UPnP/DLNA media streamer.")
+    parser = argparse.ArgumentParser(
+        description="A minimal UPnP/DLNA media streamer.")
     parser.add_argument("-t", "--timeout", type=float, default=5)
     subparsers = parser.add_subparsers(dest="subparser_name")
 
@@ -86,7 +88,8 @@ def run():
     p_play.add_argument("-d", "--device", dest="device_url")
     p_play.add_argument("-q", "--query-device", dest="device_query")
     p_play.add_argument("-s", "--subtitle", dest="file_subtitle")
-    p_play.add_argument("-n", "--no-subtitle", dest="use_subtitle", action="store_false")
+    p_play.add_argument("-n", "--no-subtitle",
+                        dest="use_subtitle", action="store_false")
     p_play.add_argument("file_video")
     p_play.set_defaults(func=play)
 
@@ -97,4 +100,3 @@ def run():
 if __name__ == "__main__":
 
     run()
-
