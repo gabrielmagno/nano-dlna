@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 
 import sys
+
 from setuptools import setup
+
 
 install_requires = [
     'Twisted>=16.2.0',
 ]
-
 if sys.version_info.major == 2:
     install_requires.append("service_identity>=16.0.0")
 
@@ -14,7 +15,8 @@ setup(
     name='nanodlna',
     version='0.1.5',
     description='A minimal UPnP/DLNA media streamer',
-    long_description='nano-dlna is a command line tool that allows you to play a local video file in your TV (or any other DLNA compatible device)',
+    long_description="""nano-dlna is a command line tool that allows you to
+ play a local video file in your TV (or any other DLNA compatible device)""",
     author='Gabriel Magno',
     author_email='gabrielmagno1@gmail.com',
     url='https://github.com/gabrielmagno/nano-dlna',
@@ -33,12 +35,14 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
-	'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Multimedia :: Sound/Audio',
         'Topic :: Multimedia :: Video',
         'Topic :: Utilities'
     ],
+    zip_safe=True,
     packages=['nanodlna'],
     package_dir={'nanodlna': 'nanodlna'},
     package_data={'nanodlna': ['templates/*.xml']},
@@ -49,4 +53,3 @@ setup(
     },
     install_requires=install_requires
 )
-
