@@ -16,10 +16,9 @@ def get_subtitle(file_video):
 
     file_subtitle = "{0}.srt".format(video)
 
-    if os.path.exists(file_subtitle):
-        return file_subtitle
-    else:
+    if not os.path.exists(file_subtitle):
         return None
+    return file_subtitle
 
 
 def list_devices(args):

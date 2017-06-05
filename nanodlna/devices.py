@@ -17,12 +17,10 @@ else:
 SSDP_BROADCAST_PORT = 1900
 SSDP_BROADCAST_ADDR = "239.255.255.250"
 
-SSDP_BROADCAST_PARAMS = ["M-SEARCH * HTTP/1.1",
-                         "HOST: {0}:{1}".format(SSDP_BROADCAST_ADDR,
-                                              SSDP_BROADCAST_PORT),
-                         "MAN: \"ssdp:discover\"",
-                         "MX: 10",
-                         "ST: ssdp:all", "", ""]
+SSDP_BROADCAST_PARAMS = [
+    "M-SEARCH * HTTP/1.1",
+    "HOST: {0}:{1}".format(SSDP_BROADCAST_ADDR, SSDP_BROADCAST_PORT),
+    "MAN: \"ssdp:discover\"", "MX: 10", "ST: ssdp:all", "", ""]
 SSDP_BROADCAST_MSG = "\r\n".join(SSDP_BROADCAST_PARAMS)
 
 UPNP_DEFAULT_SERVICE_TYPE = "urn:schemas-upnp-org:service:AVTransport:1"
@@ -53,7 +51,6 @@ def register_device(location_url):
         "action_url": action_url,
         "st": UPNP_DEFAULT_SERVICE_TYPE
     }
-
     return device
 
 
@@ -94,7 +91,6 @@ def get_devices(timeout=3.0):
 
 if __name__ == "__main__":
 
-    import sys
     import json
 
     timeout = int(sys.argv[1]) if len(sys.argv) >= 2 else 5

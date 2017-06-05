@@ -5,11 +5,11 @@ import sys
 from setuptools import setup
 
 
-install_requires = [
+_INSTALL_REQUIRES = [
     'Twisted>=16.2.0',
 ]
 if sys.version_info.major == 2:
-    install_requires.append("service_identity>=16.0.0")
+    _INSTALL_REQUIRES.append("service_identity>=16.0.0")
 
 setup(
     name='nanodlna',
@@ -51,5 +51,5 @@ setup(
             'nanodlna = nanodlna.cli:run',
         ]
     },
-    install_requires=install_requires
+    install_requires=_INSTALL_REQUIRES
 )

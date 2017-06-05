@@ -85,7 +85,8 @@ class StreamingHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_response(HTTPStatus.PARTIAL_CONTENT)
                 self.send_header(
                     "Content-Range",
-                    "bytes {0}-{1}/{2}".format(start_range, end_range, size_full))
+                    "bytes "
+                    "{0}-{1}/{2}".format(start_range, end_range, size_full))
 
             else:
                 start_range = 0

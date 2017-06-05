@@ -23,9 +23,11 @@ def set_files(files, serve_ip, serve_port):
     files_serve = {file_name: file_path
                    for file_name, file_path, file_dir in files_index.values()}
 
-    files_urls = {file_key: "http://{0}:{1}/{2}/{3}".format(
-        serve_ip, serve_port, file_key, file_name) for file_key,
-        (file_name, file_path, file_dir) in files_index.items()}
+    files_urls = {
+        file_key: "http://{0}:{1}/{2}/{3}".format(
+            serve_ip, serve_port, file_key, file_name)
+        for file_key, (file_name, file_path, file_dir)
+        in files_index.items()}
 
     return files_index, files_serve, files_urls
 
@@ -41,12 +43,12 @@ def start_server(files, serve_ip, serve_port=9000):
     root = Resource()
     for file_key, (file_name, file_path, file_dir) in files_index.items():
         root.putChild(file_key.encode("utf-8"), Resource())
-        root.children[file_key.encode(
-            "utf-8")].putChild(file_name.encode("utf-8"), File(file_path))
+        root.children[file_key.encode("utf-8")].putChild(
+            file_name.encode("utf-8"), File(file_path))
 
     reactor.listenTCP(serve_port, Site(root))
-    threading.Thread(target=reactor.run, kwargs={
-                     "installSignalHandlers": False}).start()
+    threading.Thread(
+        target=reactor.run, kwargs={"installSignalHandlers": False}).start()
 
     return files_urls
 
