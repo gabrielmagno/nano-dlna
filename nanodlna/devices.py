@@ -37,12 +37,16 @@ def register_device(location_url):
 
     friendly_name = info.find("./device/friendlyName").text
 
-    path = info.find(
-        "./device/serviceList/service/[serviceType='{0}']/controlURL".format(
-            UPNP_DEFAULT_SERVICE_TYPE
-        )
-    ).text
-    action_url = urllibparse.urljoin(location_url, path)
+    try:
+        path = info.find(
+            "./device/serviceList/service/"
+            "[serviceType='{0}']/controlURL".format(
+                UPNP_DEFAULT_SERVICE_TYPE
+            )
+        ).text
+        action_url = urllibparse.urljoin(location_url, path)
+    except AttributeError:
+        action_url = None
 
     device = {
         "location": location_url,
