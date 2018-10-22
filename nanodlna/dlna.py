@@ -20,7 +20,7 @@ def send_dlna_action(device, data, action):
 
     headers = {
         "Content-Type": "text/xml; charset=\"utf-8\"",
-        "Content-Length": "{0}".format(len(action_data)),
+        "Content-Length": len(action_data),
         "Connection": "close",
         "SOAPACTION": "\"{0}#{1}\"".format(device["st"], action)
     }
