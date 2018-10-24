@@ -15,8 +15,6 @@ from twisted.web.resource import Resource
 from twisted.web.server import Site, NOT_DONE_YET
 from twisted.web.static import File
 
-# from twisted.python import log
-
 
 class Proxy(Resource):
     _logger = Logger()
@@ -49,60 +47,65 @@ class Proxy(Resource):
             #     url=self._url,
             #     failure=failure,
             # )
-            # print(failure)
             request.setResponseCode(500)
 
         @targetDeferred.addCallback
-        def finish(ignored):
+        def finish(_):
             request.finish()
 
         return NOT_DONE_YET
 
 
-def start_server(files, serve_ip, serve_port=9000):
-    files_urls = {}
+class Server:
+    def __init__(self, ip, port):
+        self.ip = ip
+        self.port = port
 
-    root = Resource()
-    for file_key, file_path in files.items():
-        root.putChild(file_key.encode("utf-8"), Resource())
+        self.root = Resource()
 
-        if os.path.exists(file_path):
-            file_name = os.path.basename(file_path)
-            entity = File(os.path.abspath(file_path))
+    def start(self):
+        reactor.listenTCP(self.port, Site(self.root))
+        server = threading.Thread(
+            target=reactor.run, kwargs={"installSignalHandlers": False})
+        server.start()
+
+    def stop(self):
+        if reactor.running:
+            #reactor.callWhenRunning(reactor.stop)
+            reactor.stop()
+
+    def add_entry(self, key, path):
+        self.root.putChild(key.encode("utf-8"), Resource())
+
+        if os.path.exists(path):
+            file_name = os.path.basename(path)
+            entity = File(os.path.abspath(path))
         else:
             # assume we have a remote file
-            parts = urllib.parse.urlparse(file_path)
+            parts = urllib.parse.urlparse(path)
 
             if parts.netloc == "www.youtube.com":
-                v = pafy.new(file_path)
+                v = pafy.new(path)
                 match = v.getbest()
 
                 file_name = v.videoid  # match.title
                 entity = Proxy(match.url)
             else:
                 file_name = parts.path[1:]  # remove initial '/'
-                entity = Proxy(file_path)
+                entity = Proxy(path)
 
-        root.children[file_key.encode("utf-8")].putChild(
+        self.root.children[key.encode("utf-8")].putChild(
             file_name.encode("utf-8"), entity)
 
-        files_urls[file_key] = "http://{0}:{1}/{2}/{3}".format(
-            serve_ip, serve_port, file_key, file_name)
-
-    reactor.listenTCP(serve_port, Site(root))
-    server = threading.Thread(
-        target=reactor.run, kwargs={"installSignalHandlers": False})
-    server.start()
-
-    return files_urls
+        return {key: "http://{0}:{1}/{2}/{3}".format(
+            self.ip, self.port, key, file_name)}
 
 
-def stop_server():
-    # TODO: what ... how ... ???
-    # if reactor.running:
-    #     #reactor.callWhenRunning(reactor.stop)
-    #     reactor.stop()
-    pass
+def start_server(serve_ip, serve_port=9000):
+    serv = Server(serve_ip, serve_port)
+    serv.start()
+
+    return serv
 
 
 def get_serve_ip(target_ip, target_port=80):
@@ -122,5 +125,9 @@ if __name__ == "__main__":
     files['yt'] = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
     print(files)
 
-    files_urls = start_server(files, "localhost")
-    print(files_urls)
+    serv = start_server("localhost")
+    for key, path in files.items():
+        r = serv.add_entry(key, path)
+        print(r)
+
+    print(serv.add_entry('haha', '/tmp'))

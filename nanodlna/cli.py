@@ -66,10 +66,16 @@ def play(args):
 
     target_ip = device["hostname"]
     serve_ip = streaming.get_serve_ip(target_ip)
-    files_urls = streaming.start_server(files, serve_ip)
+    serv = streaming.start_server(serve_ip)
+
+    files_urls = {}
+    for key, path in files.items():
+        r = serv.add_entry(key, path)
+        files_urls.update(r)
 
     # Play the video through DLNA protocol
 
+    print(files_urls)
     dlna.play(files_urls, device)
 
 
