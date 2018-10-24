@@ -7,6 +7,7 @@ from setuptools import setup
 
 _INSTALL_REQUIRES = [
     'Twisted>=16.2.0',
+    'treq', 'pafy'
 ]
 if sys.version_info.major == 2:
     _INSTALL_REQUIRES.append("service_identity>=16.0.0")
