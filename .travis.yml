@@ -13,4 +13,4 @@ install:
   - pip install flake8
 script:
   - nanodlna list
-  - flake8 setup.py nanodlna alternatives
+  - flake8 setup.py nanodlna
