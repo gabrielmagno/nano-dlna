@@ -74,7 +74,7 @@ class StreamingHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
             size_full = fs[6]
 
             if "Range" in self.headers:
-                range_value = re.search("bytes=(?P<start>\d+)?-(?P<end>\d+)?",
+                range_value = re.search(r"bytes=(?P<start>\d+)?-(?P<end>\d+)?",
                                         self.headers["Range"])
                 start_range = max(int(range_value.group("start") or 0), 0)
                 end_range = min(int(range_value.group("end")
