@@ -11,8 +11,19 @@ if sys.version_info.major == 3:
 else:
     import urllib2 as urllibreq
 
+import traceback
+import logging
+import json
 
 def send_dlna_action(device, data, action):
+
+    logging.debug("Sending DLNA Action: {}".format(
+        json.dumps({
+            "action": action,
+            "device": device,
+            "data": data
+        })
+    ))
 
     action_data = pkgutil.get_data(
         "nanodlna", "templates/action-{0}.xml".format(action)).decode("UTF-8")
@@ -25,11 +36,37 @@ def send_dlna_action(device, data, action):
         "SOAPACTION": "\"{0}#{1}\"".format(device["st"], action)
     }
 
-    request = urllibreq.Request(device["action_url"], action_data, headers)
-    urllibreq.urlopen(request)
+    logging.debug("Sending DLNA Request: {}".format(
+        json.dumps({
+            "url": device["action_url"], 
+            "data": action_data.decode("UTF-8"), 
+            "headers": headers
+        })
+    ))
+
+    try:
+        request = urllibreq.Request(device["action_url"], action_data, headers)
+        urllibreq.urlopen(request)
+        logging.debug("Request sent")
+    except Exception:
+        logging.error("Unknown error sending request: {}".format(
+            json.dumps({
+                "url": device["action_url"], 
+                "data": action_data.decode("UTF-8"), 
+                "headers": headers,
+                "error": traceback.format_exc()
+            })
+        ))
 
 
 def play(files_urls, device):
+
+    logging.debug("Starting to play: {}".format(
+        json.dumps({
+            "files_urls" : files_urls,
+            "device": device
+        })   
+    ))
 
     video_data = {
         "uri_video": files_urls["file_video"],
@@ -51,5 +88,9 @@ def play(files_urls, device):
     else:
         video_data["metadata"] = ""
 
+    logging.debug("Created video data: {}".format(json.dumps(video_data)))
+
+    logging.debug("Setting Video URI")
     send_dlna_action(device, video_data, "SetAVTransportURI")
+    logging.debug("Playing video")
     send_dlna_action(device, video_data, "Play")
