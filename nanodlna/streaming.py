@@ -4,6 +4,8 @@
 import os
 import socket
 import threading
+import unicodedata
+import re
 
 from twisted.internet import reactor
 from twisted.web.resource import Resource
@@ -15,6 +17,11 @@ import json
 
 # from twisted.python import log
 
+def normalize_file_name(value):
+    value = unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode("ascii")
+    value = re.sub(r"[^\.\w\s-]", "", value.lower())
+    value = re.sub(r"[-\s]+", "-", value).strip("-_")
+    return value
 
 def set_files(files, serve_ip, serve_port):
 
@@ -26,7 +33,7 @@ def set_files(files, serve_ip, serve_port):
         })
     ))
 
-    files_index = {file_key: (os.path.basename(file_path),
+    files_index = {file_key: (normalize_file_name(os.path.basename(file_path)),
                               os.path.abspath(file_path),
                               os.path.dirname(os.path.abspath(file_path)))
                    for file_key, file_path in files.items()}
