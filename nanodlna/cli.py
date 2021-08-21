@@ -65,7 +65,10 @@ def play(args):
     # Configure streaming server
 
     target_ip = device["hostname"]
-    serve_ip = streaming.get_serve_ip(target_ip)
+    if args.local_host:
+        serve_ip = args.local_host
+    else:
+        serve_ip = streaming.get_serve_ip(target_ip)
     files_urls = streaming.start_server(files, serve_ip)
 
     # Play the video through DLNA protocol
@@ -85,6 +88,7 @@ def run():
 
     p_play = subparsers.add_parser('play')
     p_play.add_argument("-d", "--device", dest="device_url")
+    p_play.add_argument("-H", "--host", dest="local_host")
     p_play.add_argument("-q", "--query-device", dest="device_query")
     p_play.add_argument("-s", "--subtitle", dest="file_subtitle")
     p_play.add_argument("-n", "--no-subtitle",
