@@ -13,6 +13,8 @@ else:
     import urllib2 as urllibreq
     import urlparse as urllibparse
 
+import logging
+import json
 
 SSDP_BROADCAST_PORT = 1900
 SSDP_BROADCAST_ADDR = "239.255.255.250"
@@ -55,18 +57,31 @@ def register_device(location_url):
         "action_url": action_url,
         "st": UPNP_DEFAULT_SERVICE_TYPE
     }
+
+    logging.debug(
+        "Device registered: {}".format(
+            json.dumps({
+                "device_xml": xml,
+                "device_info": device
+            })
+        )
+    )
+
     return device
 
 
 def get_devices(timeout=3.0):
 
+    logging.debug("Configuring broadcast message")
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
     s.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 4)
     s.bind(("", SSDP_BROADCAST_PORT + 10))
 
+    logging.debug("Sending broadcast message")
     s.sendto(SSDP_BROADCAST_MSG.encode("UTF-8"), (SSDP_BROADCAST_ADDR,
                                                   SSDP_BROADCAST_PORT))
 
+    logging.debug("Waiting for devices ({} seconds)".format(timeout))
     s.settimeout(timeout)
 
     devices = []
@@ -83,6 +98,14 @@ def get_devices(timeout=3.0):
             device = dict([(a[0].strip().lower(), a[1].strip())
                            for a in info if len(a) >= 2])
             devices.append(device)
+            logging.debug(
+                "Device broadcast response: {}".format(
+                    json.dumps({
+                        "broadcast_message_raw": data.decode("UTF-8"),
+                        "broadcast_message_info": device
+                    })
+                )
+            )
         except Exception:
             pass
 
@@ -94,8 +117,6 @@ def get_devices(timeout=3.0):
 
 
 if __name__ == "__main__":
-
-    import json
 
     timeout = int(sys.argv[1]) if len(sys.argv) >= 2 else 5
 
