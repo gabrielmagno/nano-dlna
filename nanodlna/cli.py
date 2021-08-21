@@ -7,10 +7,33 @@ import json
 import os
 import sys
 import datetime
+import tempfile
 
 from . import devices, dlna, streaming
 
 import logging
+
+
+def set_logs(args):
+
+    log_filename = os.path.join(
+        tempfile.mkdtemp(),
+        "nanodlna-{}.log".format(
+            datetime.datetime.today().strftime("%Y-%m-%d_%H-%M-%S")
+        )
+    )
+
+    logging.basicConfig(
+        filename=log_filename,
+        filemode="w",
+        level=logging.INFO,
+        format="[ %(asctime)s ] %(levelname)s : %(message)s"
+    )
+
+    if args.debug_activated:
+        logging.getLogger().setLevel(logging.DEBUG)
+
+    print("nano-dlna log will be saved here: {}".format(log_filename))
 
 
 def get_subtitle(file_video):
@@ -26,6 +49,8 @@ def get_subtitle(file_video):
 
 def list_devices(args):
 
+    set_logs(args)
+
     logging.info("Scanning devices...")
     my_devices = devices.get_devices(args.timeout)
     logging.info("Number of devices found: {}".format(len(my_devices)))
@@ -35,6 +60,8 @@ def list_devices(args):
 
 
 def play(args):
+
+    set_logs(args)
 
     logging.info("Starting to play")
 
@@ -99,6 +126,7 @@ def run():
 
     parser = argparse.ArgumentParser(
         description="A minimal UPnP/DLNA media streamer.")
+    parser.set_defaults(func=lambda args: parser.print_help())
     parser.add_argument("-t", "--timeout", type=float, default=5)
     parser.add_argument("-b", "--debug",
                         dest="debug_activated", action="store_true")
@@ -118,21 +146,6 @@ def run():
     p_play.set_defaults(func=play)
 
     args = parser.parse_args()
-
-    log_filename = "nanodlna-{}.log".format(
-        datetime.datetime.today().strftime("%Y-%m-%d_%H-%M-%S")
-    )
-
-    logging.basicConfig(
-        filename=log_filename,
-        filemode="w",
-        level=logging.INFO,
-        format="[ %(asctime)s ] %(levelname)s : %(message)s"
-    )
-    print("nano-dlna log will be saved here: {}".format(log_filename))
-
-    if args.debug_activated:
-        logging.getLogger().setLevel(logging.DEBUG)
 
     args.func(args)
 
