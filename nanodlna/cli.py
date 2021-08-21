@@ -10,8 +10,8 @@ import datetime
 
 from . import devices, dlna, streaming
 
-import inspect
 import logging
+
 
 def get_subtitle(file_video):
 
@@ -115,11 +115,14 @@ def run():
 
     args = parser.parse_args()
 
-    log_filename = "nanodlna-{}.log".format(datetime.datetime.today().strftime("%Y-%m-%d_%H-%M-%S"))
+    log_filename = "nanodlna-{}.log".format(
+        datetime.datetime.today().strftime("%Y-%m-%d_%H-%M-%S")
+    )
+
     logging.basicConfig(
-        filename=log_filename, 
-        filemode="w", 
-        level=logging.INFO, 
+        filename=log_filename,
+        filemode="w",
+        level=logging.INFO,
         format="[ %(asctime)s ] %(levelname)s : %(message)s"
     )
     print("nano-dlna log will be saved here: {}".format(log_filename))

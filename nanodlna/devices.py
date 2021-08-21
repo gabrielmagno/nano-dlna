@@ -61,7 +61,7 @@ def register_device(location_url):
     logging.debug(
         "Device registered: {}".format(
             json.dumps({
-                "device_xml" : xml,
+                "device_xml": xml,
                 "device_info": device
             })
         )
@@ -101,7 +101,7 @@ def get_devices(timeout=3.0):
             logging.debug(
                 "Device broadcast response: {}".format(
                     json.dumps({
-                        "broadcast_message_raw" : data.decode("UTF-8"),
+                        "broadcast_message_raw": data.decode("UTF-8"),
                         "broadcast_message_info": device
                     })
                 )
@@ -117,8 +117,6 @@ def get_devices(timeout=3.0):
 
 
 if __name__ == "__main__":
-
-    import json
 
     timeout = int(sys.argv[1]) if len(sys.argv) >= 2 else 5
 

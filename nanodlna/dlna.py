@@ -15,6 +15,7 @@ import traceback
 import logging
 import json
 
+
 def send_dlna_action(device, data, action):
 
     logging.debug("Sending DLNA Action: {}".format(
@@ -38,8 +39,8 @@ def send_dlna_action(device, data, action):
 
     logging.debug("Sending DLNA Request: {}".format(
         json.dumps({
-            "url": device["action_url"], 
-            "data": action_data.decode("UTF-8"), 
+            "url": device["action_url"],
+            "data": action_data.decode("UTF-8"),
             "headers": headers
         })
     ))
@@ -51,8 +52,8 @@ def send_dlna_action(device, data, action):
     except Exception:
         logging.error("Unknown error sending request: {}".format(
             json.dumps({
-                "url": device["action_url"], 
-                "data": action_data.decode("UTF-8"), 
+                "url": device["action_url"],
+                "data": action_data.decode("UTF-8"),
                 "headers": headers,
                 "error": traceback.format_exc()
             })
@@ -63,9 +64,9 @@ def play(files_urls, device):
 
     logging.debug("Starting to play: {}".format(
         json.dumps({
-            "files_urls" : files_urls,
+            "files_urls": files_urls,
             "device": device
-        })   
+        })
     ))
 
     video_data = {

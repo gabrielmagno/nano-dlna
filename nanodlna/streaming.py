@@ -17,11 +17,16 @@ import json
 
 # from twisted.python import log
 
+
 def normalize_file_name(value):
-    value = unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode("ascii")
+    value = unicodedata\
+        .normalize("NFKD", value)\
+        .encode("ascii", "ignore")\
+        .decode("ascii")
     value = re.sub(r"[^\.\w\s-]", "", value.lower())
     value = re.sub(r"[-\s]+", "-", value).strip("-_")
     return value
+
 
 def set_files(files, serve_ip, serve_port):
 
