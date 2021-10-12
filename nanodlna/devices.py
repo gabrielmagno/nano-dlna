@@ -74,7 +74,7 @@ def get_devices(timeout=3.0):
 
     logging.debug("Configuring broadcast message")
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-    s.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 4)
+    #s.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 4)
     s.bind(("", SSDP_BROADCAST_PORT + 10))
 
     logging.debug("Sending broadcast message")
