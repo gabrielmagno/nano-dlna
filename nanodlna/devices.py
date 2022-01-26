@@ -26,6 +26,7 @@ SSDP_BROADCAST_PARAMS = [
 SSDP_BROADCAST_MSG = "\r\n".join(SSDP_BROADCAST_PARAMS)
 
 UPNP_DEFAULT_SERVICE_TYPE = "urn:schemas-upnp-org:service:AVTransport:1"
+DEVICE_TYPE = "urn:schemas-upnp-org:device:MediaRenderer:1"
 
 
 def register_device(location_url):
@@ -33,13 +34,44 @@ def register_device(location_url):
     xml = urllibreq.urlopen(location_url).read().decode("UTF-8")
     xml = re.sub(" xmlns=\"[^\"]+\"", "", xml, count=1)
     info = ET.fromstring(xml)
+    inList = False
 
     location = urllibparse.urlparse(location_url)
     hostname = location.hostname
 
-    friendly_name = info.find("./device/friendlyName").text
-
+    # First try deviceLists
     try:
+      friendly_name = info.find(
+          "./device/deviceList/device/"
+          "[deviceType='{0}']/friendlyName".format(
+              DEVICE_TYPE
+           )
+      ).text
+      manufacturer_name = info.find(
+          "./device/deviceList/device/"
+          "[deviceType='{0}']/manufacturer".format(
+              DEVICE_TYPE
+           )
+      ).text
+      inList = True
+    except:
+      friendly_name = info.find("./device/friendlyName").text
+      manufacturer_name = info.find("./device/manufacturer").text
+
+    if inList == True:
+      try:
+        path = info.find(
+          "./device/deviceList/device/"
+          "[deviceType='{0}']/serviceList/service/"
+          "[serviceType='{1}']/controlURL".format(
+              DEVICE_TYPE, UPNP_DEFAULT_SERVICE_TYPE
+           )
+        ).text
+        action_url = urllibparse.urljoin(location_url, path)
+      except AttributeError:
+         action_url = None
+    else:
+      try:
         path = info.find(
             "./device/serviceList/service/"
             "[serviceType='{0}']/controlURL".format(
@@ -47,12 +79,13 @@ def register_device(location_url):
             )
         ).text
         action_url = urllibparse.urljoin(location_url, path)
-    except AttributeError:
+      except AttributeError:
         action_url = None
 
     device = {
         "location": location_url,
         "hostname": hostname,
+        "manufacturer_name": manufacturer_name,
         "friendly_name": friendly_name,
         "action_url": action_url,
         "st": UPNP_DEFAULT_SERVICE_TYPE
