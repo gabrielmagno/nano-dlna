@@ -95,3 +95,23 @@ def play(files_urls, device):
     send_dlna_action(device, video_data, "SetAVTransportURI")
     logging.debug("Playing video")
     send_dlna_action(device, video_data, "Play")
+
+
+def stop(device):
+
+    logging.debug("Stoping device: {}".format(
+        json.dumps({
+            "device": device
+        })
+    ))
+    send_dlna_action(device, {"":""}, "Stop")
+
+
+def pause(device):
+
+    logging.debug("Pausing device: {}".format(
+        json.dumps({
+            "device": device
+        })
+    ))
+    send_dlna_action(device, {"":""}, "Pause")
