@@ -28,7 +28,9 @@ def send_dlna_action(device, data, action):
 
     action_data = pkgutil.get_data(
         "nanodlna", "templates/action-{0}.xml".format(action)).decode("UTF-8")
-    action_data = action_data.format(**data).encode("UTF-8")
+    if data:
+        action_data = action_data.format(**data)
+    action_data = action_data.encode("UTF-8")
 
     headers = {
         "Content-Type": "text/xml; charset=\"utf-8\"",
@@ -97,21 +99,19 @@ def play(files_urls, device):
     send_dlna_action(device, video_data, "Play")
 
 
-def stop(device):
-
-    logging.debug("Stoping device: {}".format(
-        json.dumps({
-            "device": device
-        })
-    ))
-    send_dlna_action(device, {"":""}, "Stop")
-
-
 def pause(device):
-
     logging.debug("Pausing device: {}".format(
         json.dumps({
             "device": device
         })
     ))
-    send_dlna_action(device, {"":""}, "Pause")
+    send_dlna_action(device, None, "Pause")
+
+
+def stop(device):
+    logging.debug("Stopping device: {}".format(
+        json.dumps({
+            "device": device
+        })
+    ))
+    send_dlna_action(device, None, "Stop")
