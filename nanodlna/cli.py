@@ -58,13 +58,12 @@ def list_devices(args):
     for i, device in enumerate(my_devices, 1):
         print("Device {0}:\n{1}\n\n".format(i, json.dumps(device, indent=4)))
 
+
 def find_device(args):
 
-    device = None
+    logging.info("Selecting device to play")
 
-    if not args.device_url and not args.device_query:
-        logging.info("No device url and no query string provided")
-        sys.exit("No device specified; exiting")
+    device = None
 
     if args.device_url:
         logging.info("Select device by URL")
@@ -72,47 +71,17 @@ def find_device(args):
     else:
         my_devices = devices.get_devices(args.timeout)
 
-        if len(my_devices) == 0:
-            sys.exit("No devices found; exiting")
-        elif len(my_devices) == 1:
-            logging.info("Only one device exists, selecting this")
-            device = my_devices[0]
-        else:
-            logging.info("Select device by query")
-            for listed in my_devices:
-                if args.device_query.lower() in str(listed).lower():
-                    device = listed
-                    break
+        if len(my_devices) > 0:
+            if args.device_query:
+                logging.info("Select device by query")
+                device = [
+                    device for device in my_devices
+                    if args.device_query.lower() in str(device).lower()][0]
+            else:
+                logging.info("Select first device")
+                device = my_devices[0]
 
-    if not device:
-        sys.exit("No devices found; exiting")
-
-    logging.info("Device selected: {}".format(json.dumps(device)))
     return device
-
-def pause(args):
-
-    set_logs(args)
-
-    logging.info("Selecting device to pause")
-    device=find_device(args)
-
-    # Pause through DLNA protocol
-    logging.info("Sending pause command")
-    dlna.pause(device)
-
-
-def stop(args):
-
-    set_logs(args)
-
-    logging.info("Selecting device to stop")
-
-    device=find_device(args)
-
-    # Stop through DLNA protocol
-    logging.info("Sending stop command")
-    dlna.stop(device)
 
 
 def play(args):
@@ -135,27 +104,7 @@ def play(args):
 
     logging.info("Media files: {}".format(json.dumps(files)))
 
-    # Select device to play
-    logging.info("Selecting device to play")
-
-    device = None
-
-    if args.device_url:
-        logging.info("Select device by URL")
-        device = devices.register_device(args.device_url)
-    else:
-        my_devices = devices.get_devices(args.timeout)
-
-        if len(my_devices) > 0:
-            if args.device_query:
-                logging.info("Select device by query")
-                device = [
-                    device for device in my_devices
-                    if args.device_query.lower() in str(device).lower()][0]
-            else:
-                logging.info("Select first device")
-                device = my_devices[0]
-
+    device = find_device(args)
     if not device:
         sys.exit("No devices found.")
 
@@ -178,6 +127,30 @@ def play(args):
     dlna.play(files_urls, device)
 
 
+def pause(args):
+
+    set_logs(args)
+
+    logging.info("Selecting device to pause")
+    device = find_device(args)
+
+    # Pause through DLNA protocol
+    logging.info("Sending pause command")
+    dlna.pause(device)
+
+
+def stop(args):
+
+    set_logs(args)
+
+    logging.info("Selecting device to stop")
+    device = find_device(args)
+
+    # Stop through DLNA protocol
+    logging.info("Sending stop command")
+    dlna.stop(device)
+
+
 def run():
 
     parser = argparse.ArgumentParser(
@@ -191,16 +164,6 @@ def run():
     p_list = subparsers.add_parser('list')
     p_list.set_defaults(func=list_devices)
 
-    p_stop = subparsers.add_parser('stop')
-    p_stop.add_argument("-d", "--device", dest="device_url")
-    p_stop.add_argument("-q", "--query-device", dest="device_query")
-    p_stop.set_defaults(func=stop)
-
-    p_pause = subparsers.add_parser('pause')
-    p_pause.add_argument("-d", "--device", dest="device_url")
-    p_pause.add_argument("-q", "--query-device", dest="device_query")
-    p_pause.set_defaults(func=pause)
-
     p_play = subparsers.add_parser('play')
     p_play.add_argument("-d", "--device", dest="device_url")
     p_play.add_argument("-H", "--host", dest="local_host")
@@ -210,6 +173,16 @@ def run():
                         dest="use_subtitle", action="store_false")
     p_play.add_argument("file_video")
     p_play.set_defaults(func=play)
+
+    p_pause = subparsers.add_parser('pause')
+    p_pause.add_argument("-d", "--device", dest="device_url")
+    p_pause.add_argument("-q", "--query-device", dest="device_query")
+    p_pause.set_defaults(func=pause)
+
+    p_stop = subparsers.add_parser('stop')
+    p_stop.add_argument("-d", "--device", dest="device_url")
+    p_stop.add_argument("-q", "--query-device", dest="device_query")
+    p_stop.set_defaults(func=stop)
 
     args = parser.parse_args()
 
