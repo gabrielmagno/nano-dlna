@@ -26,6 +26,7 @@ SSDP_BROADCAST_PARAMS = [
 SSDP_BROADCAST_MSG = "\r\n".join(SSDP_BROADCAST_PARAMS)
 
 UPNP_DEFAULT_SERVICE_TYPE = "urn:schemas-upnp-org:service:AVTransport:1"
+DEVICE_TYPE = "urn:schemas-upnp-org:device:MediaRenderer:1"
 
 
 def register_device(location_url):
@@ -37,22 +38,40 @@ def register_device(location_url):
     location = urllibparse.urlparse(location_url)
     hostname = location.hostname
 
-    friendly_name = info.find("./device/friendlyName").text
+    device_root = info.find("./device")
+    if not device_root:
+        device_root = info.find(
+            "./device/deviceList/device/"
+            "[deviceType='{0}']".format(
+                DEVICE_TYPE
+            )
+        )
+
+    try:
+        friendly_name = device_root.find("./friendlyName").text
+    except:
+        friendly_name = None
+
+    try:
+        manufacturer_name = device_root.find("./manufacturer").text
+    except:
+        manufacturer_name = None
 
     try:
         path = info.find(
-            "./device/serviceList/service/"
+            "./serviceList/service/"
             "[serviceType='{0}']/controlURL".format(
                 UPNP_DEFAULT_SERVICE_TYPE
             )
         ).text
         action_url = urllibparse.urljoin(location_url, path)
-    except AttributeError:
+    except:
         action_url = None
 
     device = {
         "location": location_url,
         "hostname": hostname,
+        "manufacturer_name": manufacturer_name,
         "friendly_name": friendly_name,
         "action_url": action_url,
         "st": UPNP_DEFAULT_SERVICE_TYPE
