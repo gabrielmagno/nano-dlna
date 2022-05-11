@@ -35,6 +35,15 @@ def register_device(location_url):
     xml = re.sub(" xmlns=\"[^\"]+\"", "", xml, count=1)
     info = ET.fromstring(xml)
 
+    logging.debug(
+        "Device to be registered: {}".format(
+            json.dumps({
+                "location_url": location_url,
+                "raw": xml
+            })
+        )
+    )
+
     location = urllibparse.urlparse(location_url)
     hostname = location.hostname
 
