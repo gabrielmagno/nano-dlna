@@ -25,15 +25,17 @@ SSDP_BROADCAST_PARAMS = [
     "MAN: \"ssdp:discover\"", "MX: 10", "ST: ssdp:all", "", ""]
 SSDP_BROADCAST_MSG = "\r\n".join(SSDP_BROADCAST_PARAMS)
 
-UPNP_DEFAULT_SERVICE_TYPE = "urn:schemas-upnp-org:service:AVTransport:1"
-DEVICE_TYPE = "urn:schemas-upnp-org:device:MediaRenderer:1"
+UPNP_DEVICE_TYPE = "urn:schemas-upnp-org:device:MediaRenderer:1"
+UPNP_SERVICE_TYPE = "urn:schemas-upnp-org:service:AVTransport:1"
 
 
-def register_device(location_url):
+def get_xml_field_text(xml_root, query):
+    result = None
+    if xml_root:
+        node = xml_root.find(query)
+        result = node.text if node is not None else None
+    return result
 
-    xml = urllibreq.urlopen(location_url).read().decode("UTF-8")
-    xml = re.sub(" xmlns=\"[^\"]+\"", "", xml, count=1)
-    info = ET.fromstring(xml)
 
 def register_device(location_url):
 
@@ -58,38 +60,32 @@ def register_device(location_url):
         device_root = info.find(
             "./device/deviceList/device/"
             "[deviceType='{0}']".format(
-                DEVICE_TYPE
+                UPNP_DEVICE_TYPE
             )
         )
 
-    try:
-        friendly_name = device_root.find("./friendlyName").text
-    except:
-        friendly_name = None
+    friendly_name = get_xml_field_text(device_root, "./friendlyName")
+    manufacturer = get_xml_field_text(device_root, "./manufacturer")
+    action_url_path = get_xml_field_text(
+        device_root,
+        "./serviceList/service/"
+        "[serviceType='{0}']/controlURL".format(
+            UPNP_SERVICE_TYPE
+        )
+    )
 
-    try:
-        manufacturer_name = device_root.find("./manufacturer").text
-    except:
-        manufacturer_name = None
-
-    try:
-        path = info.find(
-            "./serviceList/service/"
-            "[serviceType='{0}']/controlURL".format(
-                UPNP_DEFAULT_SERVICE_TYPE
-            )
-        ).text
-        action_url = urllibparse.urljoin(location_url, path)
-    except:
+    if action_url_path is not None:
+        action_url = urllibparse.urljoin(location_url, action_url_path)
+    else:
         action_url = None
 
     device = {
         "location": location_url,
         "hostname": hostname,
-        "manufacturer_name": manufacturer_name,
+        "manufacturer": manufacturer,
         "friendly_name": friendly_name,
         "action_url": action_url,
-        "st": UPNP_DEFAULT_SERVICE_TYPE
+        "st": UPNP_SERVICE_TYPE
     }
 
     logging.debug(
