@@ -35,14 +35,20 @@ def register_device(location_url):
     xml = re.sub(" xmlns=\"[^\"]+\"", "", xml, count=1)
     info = ET.fromstring(xml)
 
+def register_device(location_url):
+
+    xml_raw = urllibreq.urlopen(location_url).read().decode("UTF-8")
     logging.debug(
         "Device to be registered: {}".format(
             json.dumps({
                 "location_url": location_url,
-                "raw": xml
+                "xml_raw": xml_raw
             })
         )
     )
+
+    xml = re.sub(r"""\s(xmlns="[^"]+"|xmlns='[^']+')""", '', xml_raw, count=1)
+    info = ET.fromstring(xml)
 
     location = urllibparse.urlparse(location_url)
     hostname = location.hostname
