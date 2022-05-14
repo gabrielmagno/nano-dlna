@@ -100,6 +100,17 @@ def register_device(location_url):
     return device
 
 
+def remove_duplicates(devices):
+    seen = set()
+    result_devices = []
+    for device in devices:
+        device_str = str(device)
+        if device_str not in seen:
+            result_devices.append(device)
+            seen.add(device_str)
+    return result_devices
+
+
 def get_devices(timeout=3.0):
 
     logging.debug("Configuring broadcast message")
@@ -150,6 +161,8 @@ def get_devices(timeout=3.0):
         register_device(location_url)
         for location_url in devices_urls
     ]
+
+    devices = remove_duplicates(devices)
 
     return devices
 
