@@ -6,6 +6,7 @@ import argparse
 import json
 import os
 import sys
+import signal
 import datetime
 import tempfile
 
@@ -122,9 +123,20 @@ def play(args):
 
     logging.info("Streaming server ready")
 
+    # Register handler if interrupt signal is received
+    signal.signal(signal.SIGINT, build_handler_stop(device))
+
     # Play the video through DLNA protocol
     logging.info("Sending play command")
     dlna.play(files_urls, device)
+
+
+def build_handler_stop(device):
+    def signal_handler(sig, frame):
+        logging.info("Interrupt signal detected, sending stop command to device")
+        dlna.stop(device)
+        sys.exit("Interrupt signal detected, sent stop command to device, exiting now")
+    return signal_handler
 
 
 def pause(args):
