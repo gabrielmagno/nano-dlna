@@ -88,6 +88,10 @@ def start_server(files, serve_ip, serve_port=9000):
     return files_urls
 
 
+def stop_server():
+    reactor.stop()
+
+
 def get_serve_ip(target_ip, target_port=80):
     logging.debug("Identifying server IP")
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

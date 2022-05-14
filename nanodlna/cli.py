@@ -133,14 +133,20 @@ def play(args):
 
 def build_handler_stop(device):
     def signal_handler(sig, frame):
-        logging.info(
-            "Interrupt signal detected"
-            "sending stop command to device"
-        )
+
+        logging.info("Interrupt signal detected")
+
+        logging.info("Sending stop command to render device")
         dlna.stop(device)
+
+        logging.info("Stopping streaming server")
+        streaming.stop_server()
+
         sys.exit(
-            "Interrupt signal detected"
-            "sent stop command to device, exiting now"
+            "Interrupt signal detected. "
+            "Sent stop command to render device and "
+            "stopped streaming. "
+            "nano-dlna will exit now!"
         )
     return signal_handler
 
