@@ -139,9 +139,17 @@ def get_devices(timeout=3.0):
         except Exception:
             pass
 
-    devices_urls = [dev["location"]
-                    for dev in devices if "AVTransport" in dev["st"]]
-    devices = [register_device(location_url) for location_url in devices_urls]
+    devices_urls = [
+        dev["location"]
+        for dev in devices
+        if "st" in dev and
+           "AVTransport" in dev["st"]
+    ]
+
+    devices = [
+        register_device(location_url)
+        for location_url in devices_urls
+    ]
 
     return devices
 
