@@ -133,9 +133,15 @@ def play(args):
 
 def build_handler_stop(device):
     def signal_handler(sig, frame):
-        logging.info("Interrupt signal detected, sending stop command to device")
+        logging.info(
+            "Interrupt signal detected"
+            "sending stop command to device"
+        )
         dlna.stop(device)
-        sys.exit("Interrupt signal detected, sent stop command to device, exiting now")
+        sys.exit(
+            "Interrupt signal detected"
+            "sent stop command to device, exiting now"
+        )
     return signal_handler
 
 
