@@ -53,7 +53,7 @@ def list_devices(args):
     set_logs(args)
 
     logging.info("Scanning devices...")
-    my_devices = devices.get_devices(args.timeout)
+    my_devices = devices.get_devices(args.timeout, args.local_host)
     logging.info("Number of devices found: {}".format(len(my_devices)))
 
     for i, device in enumerate(my_devices, 1):
@@ -70,7 +70,7 @@ def find_device(args):
         logging.info("Select device by URL")
         device = devices.register_device(args.device_url)
     else:
-        my_devices = devices.get_devices(args.timeout)
+        my_devices = devices.get_devices(args.timeout, args.local_host)
 
         if len(my_devices) > 0:
             if args.device_query:
@@ -180,6 +180,7 @@ def run():
     parser = argparse.ArgumentParser(
         description="A minimal UPnP/DLNA media streamer.")
     parser.set_defaults(func=lambda args: parser.print_help())
+    parser.add_argument("-H", "--host", dest="local_host")
     parser.add_argument("-t", "--timeout", type=float, default=5)
     parser.add_argument("-b", "--debug",
                         dest="debug_activated", action="store_true")
@@ -190,7 +191,6 @@ def run():
 
     p_play = subparsers.add_parser('play')
     p_play.add_argument("-d", "--device", dest="device_url")
-    p_play.add_argument("-H", "--host", dest="local_host")
     p_play.add_argument("-q", "--query-device", dest="device_query")
     p_play.add_argument("-s", "--subtitle", dest="file_subtitle")
     p_play.add_argument("-n", "--no-subtitle",

@@ -3,6 +3,7 @@
 
 import re
 import socket
+import struct
 import sys
 import xml.etree.ElementTree as ET
 
@@ -111,12 +112,20 @@ def remove_duplicates(devices):
     return result_devices
 
 
-def get_devices(timeout=3.0):
+def get_devices(timeout=3.0, host=None):
+
+    if not host:
+        host = "0.0.0.0"
+    logging.debug("Searching for devices on {}".format(host))
 
     logging.debug("Configuring broadcast message")
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-    s.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 4)
-    s.bind(("", SSDP_BROADCAST_PORT + 10))
+
+    # OpenBSD needs the ttl for the IP_MULTICAST_TTL as an unsigned char
+    ttl = struct.pack("B", 4)
+    s.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, ttl)
+
+    s.bind((host, 0))
 
     logging.debug("Sending broadcast message")
     s.sendto(SSDP_BROADCAST_MSG.encode("UTF-8"), (SSDP_BROADCAST_ADDR,
@@ -171,7 +180,7 @@ if __name__ == "__main__":
 
     timeout = int(sys.argv[1]) if len(sys.argv) >= 2 else 5
 
-    devices = get_devices(timeout)
+    devices = get_devices(timeout, "0.0.0.0")
 
     for i, device in enumerate(devices, 1):
         print("Device {0}:\n{1}\n\n".format(i, json.dumps(device, indent=4)))
