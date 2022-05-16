@@ -101,6 +101,17 @@ def register_device(location_url):
     return device
 
 
+def remove_duplicates(devices):
+    seen = set()
+    result_devices = []
+    for device in devices:
+        device_str = str(device)
+        if device_str not in seen:
+            result_devices.append(device)
+            seen.add(device_str)
+    return result_devices
+
+
 def get_devices(timeout=3.0, host=None):
 
     if not host:
@@ -147,9 +158,19 @@ def get_devices(timeout=3.0, host=None):
         except Exception:
             pass
 
-    devices_urls = [dev["location"]
-                    for dev in devices if "AVTransport" in dev["st"]]
-    devices = [register_device(location_url) for location_url in devices_urls]
+    devices_urls = [
+        dev["location"]
+        for dev in devices
+        if "st" in dev and
+           "AVTransport" in dev["st"]
+    ]
+
+    devices = [
+        register_device(location_url)
+        for location_url in devices_urls
+    ]
+
+    devices = remove_duplicates(devices)
 
     return devices
 
