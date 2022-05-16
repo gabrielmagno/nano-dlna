@@ -9,7 +9,7 @@ A minimal UPnP/DLNA media streamer.
 
 nano-dlna is a command line tool that allows you to play a local video file in your TV (or any other DLNA compatible device).
 
-**Note**: also checkout [crab-dlna](https://github.com/gabrielmagno/crab-dlna), a Rust 🦀 implementation of `nano-dlna`.
+🦀 **Note**: also checkout [crab-dlna](https://github.com/gabrielmagno/crab-dlna), a Rust implementation of nano-dlna.
 
 Features
 --------
