@@ -116,6 +116,7 @@ def get_devices(timeout=3.0, host=None):
 
     if not host:
         host = "0.0.0.0"
+    logging.debug("Searching for devices on {}".format(host))
 
     logging.debug("Configuring broadcast message")
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
