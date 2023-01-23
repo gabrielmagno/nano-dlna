@@ -111,20 +111,29 @@ def play(args):
 
     logging.info("Device selected: {}".format(json.dumps(device)))
 
-    # Configure streaming server
-    logging.info("Configuring streaming server")
+    
+    if os.path.exists(args.file_video):
+        # Configure streaming server
+        logging.info("Configuring streaming server")
 
-    target_ip = device["hostname"]
-    if args.local_host:
-        serve_ip = args.local_host
+        target_ip = device["hostname"]
+        if args.local_host:
+            serve_ip = args.local_host
+        else:
+            serve_ip = streaming.get_serve_ip(target_ip)
+        files_urls = streaming.start_server(files, serve_ip)
+
+        logging.info("Streaming server ready")
+
+        # Register handler if interrupt signal is received
+        signal.signal(signal.SIGINT, build_handler_stop(device))
+
+    elif str.startswith(str.lower(args.file_video),"http"):
+        files_urls = files
+        pass
     else:
-        serve_ip = streaming.get_serve_ip(target_ip)
-    files_urls = streaming.start_server(files, serve_ip)
+        sys.exit("No video file")
 
-    logging.info("Streaming server ready")
-
-    # Register handler if interrupt signal is received
-    signal.signal(signal.SIGINT, build_handler_stop(device))
 
     # Play the video through DLNA protocol
     logging.info("Sending play command")
