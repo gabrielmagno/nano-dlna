@@ -139,7 +139,7 @@ def seek(args):
     if not device:
         sys.exit("No devices found.")
 
-    logging.info("Sending seek command")
+    logging.info("Sending seek command: {}".format(args.target))
     dlna.seek(args.target, device)
 
 

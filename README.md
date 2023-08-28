@@ -48,9 +48,9 @@ Play a video, specifying the device through its exact location (no scan, faster)
 
 ### Seek
 
-When a video is in play, you can issue `seek` command to adjust its postions:
+When a video is playing, you can issue a `seek` command to adjust its postion:
 
-    nanodlna seek -q 'osmc' '00:17:25'
+    nanodlna seek -q 'TV' '00:17:25'
 
 With device option:
 
