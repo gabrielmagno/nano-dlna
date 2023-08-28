@@ -46,6 +46,15 @@ Play a video, specifying the device through its exact location (no scan, faster)
 
     nanodlna play That.Movie.mkv -d "http://192.168.1.13:1082/"
 
+### Seek
+
+When a video is playing, you can issue a `seek` command to adjust its postion:
+
+    nanodlna seek -q 'TV' '00:17:25'
+
+With device option:
+
+    nanodlna seek -d 'http://192.168.1.13:1082/' '01:22:00'
 
 
 Installation

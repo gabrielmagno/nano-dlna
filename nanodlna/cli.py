@@ -131,6 +131,18 @@ def play(args):
     dlna.play(files_urls, device)
 
 
+def seek(args):
+    set_logs(args)
+    logging.info("Starting to seek")
+
+    device = find_device(args)
+    if not device:
+        sys.exit("No devices found.")
+
+    logging.info("Sending seek command: {}".format(args.target))
+    dlna.seek(args.target, device)
+
+
 def build_handler_stop(device):
     def signal_handler(sig, frame):
 
@@ -197,6 +209,12 @@ def run():
                         dest="use_subtitle", action="store_false")
     p_play.add_argument("file_video")
     p_play.set_defaults(func=play)
+
+    p_seek = subparsers.add_parser('seek')
+    p_seek.add_argument("-d", "--device", dest="device_url")
+    p_seek.add_argument("-q", "--query-device", dest="device_query")
+    p_seek.add_argument("target", help="e.g. '00:17:25'")
+    p_seek.set_defaults(func=seek)
 
     p_pause = subparsers.add_parser('pause')
     p_pause.add_argument("-d", "--device", dest="device_url")
