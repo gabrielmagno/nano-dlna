@@ -99,6 +99,13 @@ def play(files_urls, device):
     send_dlna_action(device, video_data, "Play")
 
 
+def seek(seek_target, device):
+    action_data = {
+        "seek_target": seek_target,
+    }
+    send_dlna_action(device, action_data, "Seek")
+
+
 def pause(device):
     logging.debug("Pausing device: {}".format(
         json.dumps({
